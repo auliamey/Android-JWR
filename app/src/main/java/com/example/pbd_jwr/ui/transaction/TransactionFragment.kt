@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.pbd_jwr.databinding.FragmentTransactionBinding
 
-class TransacationFragment : Fragment() {
+class TransactionFragment : Fragment() {
 
     private var _binding: FragmentTransactionBinding? = null
 
@@ -22,14 +22,14 @@ class TransacationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val notificationsViewModel =
+        val transactionViewModel =
             ViewModelProvider(this)[TransactionViewModel::class.java]
 
         _binding = FragmentTransactionBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textTransaction
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
+        transactionViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root
