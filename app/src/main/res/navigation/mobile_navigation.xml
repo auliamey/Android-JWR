@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_transaction"
-        android:name="com.example.pbd_jwr.ui.transaction.TransacationFragment"
+        android:name="com.example.pbd_jwr.ui.transaction.TransactionFragment"
         android:label="@string/title_transaction"
         tools:layout="@layout/fragment_transaction" />
 
