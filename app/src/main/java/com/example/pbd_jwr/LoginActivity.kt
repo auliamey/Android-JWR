@@ -117,14 +117,13 @@ class LoginActivity : AppCompatActivity() {
     private fun isLoggedIn(): Boolean {
         // Check if the user is already logged in (e.g., check if credentials are stored)
         // Return true if logged in, false otherwise
-        // Replace this with your actual implementation
         return sharedPreferences.getString("isRemember","") == "true" // Placeholder implementation
     }
 
 
     private fun post(email: String, password: String, isRemember:Boolean){
 
-
+        //Initiate JSON Obj
         val jsonObject = JSONObject()
         jsonObject.put("email", email)
         jsonObject.put("password", password)
@@ -137,6 +136,7 @@ class LoginActivity : AppCompatActivity() {
         println(email)
         println(password)
 
+        //Make Request Using Retrofit
         val request :Request = Request.Builder().url(postURL).post(requestBody).build();
         val response = client.newCall(request).enqueue(object : Callback{
             override fun onFailure(call: Call, e: IOException) {
