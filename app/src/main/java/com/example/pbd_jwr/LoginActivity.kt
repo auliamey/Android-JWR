@@ -5,13 +5,24 @@ package com.example.pbd_jwr
 //import androidx.navigation.ui.AppBarConfiguration
 //import androidx.navigation.ui.setupWithNavController
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.os.Bundle
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
 import android.util.Log
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import androidx.security.crypto.MasterKeys
 import com.example.pbd_jwr.databinding.ActivityLoginBinding
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.FormBody
@@ -34,25 +45,56 @@ class LoginActivity : AppCompatActivity() {
     private  var client = OkHttpClient()
     private val postURL = "https://pbd-backend-2024.vercel.app/api/auth/login"
     val mediaType = "application/json; charset=utf-8".toMediaType()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
+    private val keyGenParameterSpec = KeyGenParameterSpec.Builder(
+        "login",
+        KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+    ).setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+        .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+        .setKeySize(256)
+        .build()
+
+    private lateinit var masterKeyAlias: MasterKey
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferencesEditor :Editor
+    override fun onCreate(savedInstanceState: Bundle?) {
+//                println(getSharedPreferences("user", MODE_PRIVATE).getString("token",""))
+
+        super.onCreate(savedInstanceState)
+        masterKeyAlias = MasterKey.Builder(applicationContext, "login")
+            .setKeyGenParameterSpec(keyGenParameterSpec)
+            .build()
+        sharedPreferences = EncryptedSharedPreferences.create(
+            applicationContext,
+            "login",
+            masterKeyAlias,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
         // Check if the user is already logged in
         if (isLoggedIn()) {
             // If the user is already logged in, start the MainActivity
-            startMainActivity()
+
+            val emailRemembered = sharedPreferences.getString("email","")
+            val passwordRemembered = sharedPreferences.getString("password","")
+            if (passwordRemembered != null && emailRemembered != null) {
+                post(emailRemembered,passwordRemembered,true)
+            }
             return
         }
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val Email: TextView = findViewById(R.id.emailText)
-        val Password: TextView = findViewById(R.id.passwordText)
+        val checkBox: CheckBox = binding.rememberMe
+
+
+        val Email: TextView = binding.emailText
+        val Password: TextView = binding.passwordText
 
 
         // Set up login UI and handle login process
-        val loginButton: Button = findViewById(R.id.loginButton)
+        val loginButton: Button = binding.loginButton
         loginButton.setOnClickListener {
             // Perform login authentication
             email = Email.text.toString()
@@ -65,8 +107,8 @@ class LoginActivity : AppCompatActivity() {
             }else if(password == ""){
                 Password.error = "Password is required"
             }else{
-
-                post(email,password)
+                val isRemember = checkBox.isChecked
+                post(email,password,isRemember)
             }
 
         }
@@ -76,25 +118,22 @@ class LoginActivity : AppCompatActivity() {
         // Check if the user is already logged in (e.g., check if credentials are stored)
         // Return true if logged in, false otherwise
         // Replace this with your actual implementation
-        return false // Placeholder implementation
+        return sharedPreferences.getString("isRemember","") == "true" // Placeholder implementation
     }
 
-    private fun authenticateUser(email: String, password: String) {
-        // Perform authentication logic (e.g., check credentials against database)
-        // Return true if authentication is successful, false otherwise
-        post(email, password)
-//        return true;
-    }
 
-    private fun post(email: String, password: String){
+    private fun post(email: String, password: String, isRemember:Boolean){
 
 
         val jsonObject = JSONObject()
         jsonObject.put("email", email)
         jsonObject.put("password", password)
         val requestBody :RequestBody = jsonObject.toString().toRequestBody(mediaType)
-        println(requestBody.toString())
 
+
+
+        println(isRemember)
+        println(requestBody.toString())
         println(email)
         println(password)
 
@@ -111,12 +150,35 @@ class LoginActivity : AppCompatActivity() {
 
                 response.use {
                     if(response.isSuccessful){
-                        Log.i("HTTP Succes",response.body.toString())
-                        println(response.body?.string())
-                        println(response.code)
+                        response.body?.let {
+                            val responseBodyString = it.string()
+                            val jsonObject = JSONObject(responseBodyString)
+
+                            val token = jsonObject.getString("token")
+
+
+
+                            sharedPreferencesEditor = sharedPreferences.edit()
+                            sharedPreferencesEditor.putString("token",token)
+                            if(isRemember){
+                                sharedPreferencesEditor.putString("isRemember","true")
+                                sharedPreferencesEditor.putString("email",email)
+                                sharedPreferencesEditor.putString("password",password)
+                            }
+                            sharedPreferencesEditor.commit()
+                            println("Token: $token")
+                        } ?: run {
+                            println("Response body is null.")
+                        }
+
+                        Log.i("HTTP Success",response.body.toString())
+                        startMainActivity()
                     }else{
                         Log.e("HTTP Error","Rusak")
-                        println(response.code)
+                        runOnUiThread {
+                            Toast.makeText(applicationContext, "Wrong credentials", Toast.LENGTH_SHORT).show()
+
+                        }
                     }
 
                 }
@@ -124,11 +186,18 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
+
     }
     private fun startMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish() // Finish LoginActivity to prevent user from returning by pressing back
+
+        println(    sharedPreferences.getString("token",""))
+        println(    sharedPreferences.getString("password",""))
+        println(    sharedPreferences.getString("isRemember",""))
+
+
     }
 
 
