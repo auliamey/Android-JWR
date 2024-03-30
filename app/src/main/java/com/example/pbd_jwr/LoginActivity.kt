@@ -117,20 +117,13 @@ class LoginActivity : AppCompatActivity() {
         jsonObject.put("password", password)
         val requestBody :RequestBody = jsonObject.toString().toRequestBody(mediaType)
 
-
-
-        println(isRemember)
-        println(requestBody.toString())
-        println(email)
-        println(password)
-
         //Make Request Using Retrofit
         val request :Request = Request.Builder().url(postURL).post(requestBody).build();
         val response = client.newCall(request).enqueue(object : Callback{
             override fun onFailure(call: Call, e: IOException) {
 
                 runOnUiThread {
-                    e.printStackTrace();
+                    Toast.makeText(applicationContext, "Failed to login", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -154,15 +147,15 @@ class LoginActivity : AppCompatActivity() {
                                 sharedPreferencesEditor.putString("password",password)
                             }
                             sharedPreferencesEditor.commit()
-                            println("Token: $token")
                         } ?: run {
-                            println("Response body is null.")
+                            runOnUiThread {
+                                Toast.makeText(applicationContext, "Server error", Toast.LENGTH_SHORT).show()
+
+                            }
                         }
 
-                        Log.i("HTTP Success",response.body.toString())
                         startMainActivity()
                     }else{
-                        Log.e("HTTP Error","Rusak")
                         runOnUiThread {
                             Toast.makeText(applicationContext, "Wrong credentials", Toast.LENGTH_SHORT).show()
 
@@ -181,9 +174,6 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
         finish() // Finish LoginActivity to prevent user from returning by pressing back
 
-        println(    sharedPreferences.getString("token",""))
-        println(    sharedPreferences.getString("password",""))
-        println(    sharedPreferences.getString("isRemember",""))
 
 
     }
