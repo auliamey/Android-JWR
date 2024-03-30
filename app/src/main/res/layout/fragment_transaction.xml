@@ -7,7 +7,6 @@
     tools:context=".MainActivity"
 
     >
-
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
@@ -15,7 +14,10 @@
         android:background="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+
         app:layout_constraintTop_toTopOf="parent" />
+
+
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
@@ -28,6 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

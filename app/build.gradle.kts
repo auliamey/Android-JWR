@@ -63,8 +63,6 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-
 
 
     // ROOM
@@ -109,18 +107,20 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:3.12.4")
 
-    // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
-
-    implementation("com.squareup.okhttp3:okhttp:4.9.2")
+    //okHttp
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation ("com.squareup.moshi:moshi:1.12.0")
     implementation ("com.squareup.moshi:moshi-kotlin:1.12.0")
-
-    implementation("androidx.room:room-runtime:2.6.1")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    //Encrypted SharedPref
     implementation("androidx.security:security-crypto:1.1.0-alpha03")
+
+    
+    implementation("androidx.room:room-runtime:2.6.1")
+
+
 }
 
 kapt {
