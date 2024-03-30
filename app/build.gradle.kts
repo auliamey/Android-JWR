@@ -1,6 +1,10 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id ("kotlin-kapt")
+    id ("kotlin-parcelize")
+    id("com.google.devtools.ksp")
+    id ("androidx.navigation.safeargs")
 }
 
 android {
@@ -9,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.pbd_jwr"
-        minSdk = 24
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -33,22 +37,82 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures {
-        viewBinding = true
+    buildFeatures{
+        dataBinding {
+            enable = true
+        }
+
+        viewBinding {
+            enable = true
+        }
     }
 }
 
 dependencies {
+    implementation("androidx.appcompat:appcompat:$rootProject.appCompatVersion")
+    implementation("androidx.activity:activity-ktx:$rootProject.activityVersion")
+
+    kapt("com.android.databinding:compiler:3.1.4")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // ROOM
+    val roomVersion = "2.6.1"
+
+    // Room components
+    implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    androidTestImplementation("androidx.room:room-testing:$roomVersion")
+
+    val lifecycleVersion = "2.7.0"
+    // Lifecycle components
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
+
+    // Kotlin components
+    val coroutine = "1.7.1"
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.20")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine")
+
+    // UI
+    implementation("androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion")
+    implementation("com.google.android.material:material:$rootProject.materialVersion")
+
+    // Navigation
+    val navVersion = "2.7.7"
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+
+    // Testing
+    testImplementation("junit:junit:$rootProject.junitVersion")
+//    androidTestImplementation("androidx.arch.core:core-testing:$rootProject.coreTestingVersion")
+//    androidTestImplementation("androidx.test.espresso:espresso-core:$rootProject.espressoVersion")
+//    androidTestImplementation("androidx.test.ext:junit:$rootProject.androidxJunitVersion")
+
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // For unit tests
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:3.12.4")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.2")
+
+    implementation("androidx.room:room-runtime:2.6.1")
+
+}
+
+kapt {
+    generateStubs = true
 }
