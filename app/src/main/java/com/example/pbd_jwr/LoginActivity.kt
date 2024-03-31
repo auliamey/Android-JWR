@@ -1,6 +1,5 @@
 package com.example.pbd_jwr
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
@@ -59,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         networkCallback = NetworkCallbackImplementation(this)
         registerNetworkCallback()
 
