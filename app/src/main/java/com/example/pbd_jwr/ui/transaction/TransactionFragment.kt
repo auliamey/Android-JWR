@@ -1,37 +1,59 @@
 package com.example.pbd_jwr.ui.transaction
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pbd_jwr.databinding.FragmentTransactionBinding
+import com.example.pbd_jwr.R
 
 class TransactionFragment : Fragment() {
 
     private var _binding: FragmentTransactionBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+
+    private lateinit var mTransactionViewModel: TransactionViewModel
+    private lateinit var transactionAdapter: TransactionAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val transactionViewModel =
-            ViewModelProvider(this)[TransactionViewModel::class.java]
+        mTransactionViewModel = ViewModelProvider(this).get(TransactionViewModel::class.java)
 
         _binding = FragmentTransactionBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textTransaction
-        transactionViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        mTransactionViewModel.getAllTransactions().observe(viewLifecycleOwner, Observer { transactions ->
+            transactions.forEach { transaction ->
+                Log.d("Transaction", "Title: ${transaction.title}, Category: ${transaction.category}, Amount: ${transaction.amount}")
+            }
+        })
+
+        transactionAdapter = TransactionAdapter()
+
+        binding.recyclerViewTransactions.apply {
+            adapter = transactionAdapter
+            layoutManager = LinearLayoutManager(requireContext())
         }
+
+        binding.btnAdd.setOnClickListener {
+            // Navigate to TransactionAddFragment when the button is clicked
+            findNavController().navigate(R.id.action_transactionFragment_to_transactionAddFragment)
+        }
+
+        mTransactionViewModel.getAllTransactions().observe(viewLifecycleOwner, Observer { transactions ->
+            Log.d("Transaction", "${transactions}")
+            transactionAdapter.submitList(transactions)
+        })
+
         return root
     }
 
@@ -39,4 +61,5 @@ class TransactionFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }
