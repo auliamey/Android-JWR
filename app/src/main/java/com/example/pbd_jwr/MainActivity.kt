@@ -6,16 +6,13 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
+
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
 import com.example.pbd_jwr.backgroundService.JWTValidationService
 import com.example.pbd_jwr.databinding.ActivityMainBinding
 import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
