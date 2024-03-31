@@ -14,16 +14,16 @@
 
     <item
         android:id="@+id/floatingNav"
-        android:title=""
+        android:title="@string/title_scan"
         />
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_settings"
         android:icon="@drawable/ic_settings_24"
         android:title="@string/title_settings" />
 
     <item
-        android:id="@+id/navigation_profile"
+        android:id="@+id/logout"
         android:icon="@drawable/logout"
-        android:title="@string/title_profile" />
+        android:title="@string/logout" />
 
 </menu>

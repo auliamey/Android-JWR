@@ -1,4 +1,4 @@
-package com.example.pbd_jwr.ui.settings
+package com.example.pbd_jwr.ui.scan
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.pbd_jwr.databinding.FragmentSettingsBinding
 
-class SettingsFragment : Fragment() {
+class ScanFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
 
@@ -22,14 +22,14 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val settingsViewModel =
-            ViewModelProvider(this)[SettingsViewModel::class.java]
+        val scanViewModel =
+            ViewModelProvider(this)[ScanViewModel::class.java]
 
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textSettings
-        settingsViewModel.text.observe(viewLifecycleOwner) {
+        scanViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root
