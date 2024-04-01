@@ -66,7 +66,9 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         val fab: FloatingActionButton = binding.fabScan
         fab.setOnClickListener {
-            navController.navigate(R.id.navigation_scan)
+            // Start ScanActivity
+            val intent = Intent(this, ScanActivity::class.java)
+            startActivity(intent)
         }
         navView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
