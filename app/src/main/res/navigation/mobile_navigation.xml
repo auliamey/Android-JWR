@@ -47,6 +47,7 @@
 
 
 
+
     <fragment
         android:id="@+id/navigation_settings"
         android:name="com.example.pbd_jwr.ui.settings.SettingsFragment"
