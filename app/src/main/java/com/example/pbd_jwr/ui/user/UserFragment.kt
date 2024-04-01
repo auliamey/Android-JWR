@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pbd_jwr.R
 import com.example.pbd_jwr.data.entity.User
 import com.example.pbd_jwr.data.repository.UserRepository
-import com.example.pbd_jwr.databinding.FragmentTransactionBinding
 import com.example.pbd_jwr.databinding.FragmentUserBinding
 
 class UserFragment(private val userRepository: UserRepository) : Fragment() {
