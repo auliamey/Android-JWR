@@ -107,6 +107,10 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:3.12.4")
 
+    // Location
+    implementation("com.google.android.gms:play-services-location:18.0.0")
+
+
 
     //okHttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0")

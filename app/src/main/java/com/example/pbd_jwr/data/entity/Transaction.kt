@@ -8,8 +8,7 @@ import androidx.room.PrimaryKey
 @Parcelize
 @Entity(tableName = "transaction")
 data class Transaction(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val userId: Long,
     val title: String,
     val category: String,
