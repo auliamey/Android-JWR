@@ -26,10 +26,12 @@ class TransactionFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mTransactionViewModel = ViewModelProvider(this).get(TransactionViewModel::class.java)
-
         _binding = FragmentTransactionBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        mTransactionViewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
+
+
 
         mTransactionViewModel.getAllTransactions().observe(viewLifecycleOwner, Observer { transactions ->
             transactions.forEach { transaction ->
