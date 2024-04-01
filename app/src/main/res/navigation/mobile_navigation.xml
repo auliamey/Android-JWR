@@ -24,7 +24,12 @@
     android:id="@+id/navigation_transaction_detail"
     android:name="com.example.pbd_jwr.ui.transaction.TransactionDetailFragment"
     android:label=""
-    tools:layout="@layout/fragment_transaction_detail" />
+    tools:layout="@layout/fragment_transaction_detail">
+
+        <action
+            android:id="@+id/action_transactionDetailFragment_to_transactionAddFragment"
+            app:destination="@id/navigation_transaction_add" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_transaction_add"

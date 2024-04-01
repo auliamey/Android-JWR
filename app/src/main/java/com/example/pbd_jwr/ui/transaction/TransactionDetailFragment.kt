@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.example.pbd_jwr.R
 import com.example.pbd_jwr.data.entity.Transaction
 import com.example.pbd_jwr.databinding.FragmentTransactionDetailBinding
 
@@ -31,15 +34,33 @@ class TransactionDetailFragment : Fragment() {
 
         val transaction = arguments?.getParcelable<Transaction>("transaction")
 
-        transaction?.let { displayTransactionDetails(it) }
 
-        binding.btnBack.setOnClickListener {
+        if (transaction != null) {
+            displayTransactionDetails(transaction)
+
+
+            binding.btnBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
+
+            binding.btnDelete.setOnClickListener {
+                transaction?.let { deleteTransaction(it) }
+            }
+
+            binding.btnEdit.setOnClickListener {
+                val bundle = Bundle().apply {
+                    putParcelable("transaction", transaction)
+                    putLong("transactionId", transaction.id) // Pass the transaction ID
+                    putBoolean("editMode", true) // Set edit mode to true
+                }
+                findNavController().navigate(R.id.action_transactionDetailFragment_to_transactionAddFragment, bundle)
+            }
+
+        } else {
+            Toast.makeText(requireContext(), "Transaction not found", Toast.LENGTH_SHORT).show()
             findNavController().popBackStack()
         }
 
-        binding.btnDelete.setOnClickListener {
-            transaction?.let { deleteTransaction(it) }
-        }
 
         return root
     }

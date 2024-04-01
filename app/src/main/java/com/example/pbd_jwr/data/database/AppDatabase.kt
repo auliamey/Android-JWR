@@ -75,8 +75,45 @@ abstract class AppDatabase : RoomDatabase() {
                 location = "Location 2",
                 date = System.currentTimeMillis()
             )
+            val transaction3 = Transaction(
+                    userId = user2.id,
+                    title = "Transaction 3",
+                    category = "Category 3",
+                    amount = 300.0,
+                    location = "Location 3",
+                    date = System.currentTimeMillis()
+            )
+            val transaction4 = Transaction(
+                    userId = user2.id,
+                    title = "Transaction 4",
+                    category = "Category 4",
+                    amount = 400.0,
+                    location = "Location 4",
+                    date = System.currentTimeMillis()
+            )
+            val transaction5 = Transaction(
+                    userId = user1.id,
+                    title = "Transaction 5",
+                    category = "Category 5",
+                    amount = 500.0,
+                    location = "Location 5",
+                    date = System.currentTimeMillis()
+            )
+            val transaction6 = Transaction(
+                    userId = user1.id,
+                    title = "Transaction 6",
+                    category = "Category 6",
+                    amount = 600.0,
+                    location = "Location 6",
+                    date = System.currentTimeMillis()
+            )
             transactionDao.addTransaction(transaction1)
             transactionDao.addTransaction(transaction2)
+            transactionDao.addTransaction(transaction3)
+            transactionDao.addTransaction(transaction4)
+            transactionDao.addTransaction(transaction5)
+            transactionDao.addTransaction(transaction6)
+
         }
     }
 }

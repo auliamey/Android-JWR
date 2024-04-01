@@ -31,8 +31,25 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
 
     fun addTransaction(transaction: Transaction) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addTransaction(transaction)
-            _transactionSubmitted.value = true
+            try {
+                repository.addTransaction(transaction)
+                _transactionSubmitted.postValue(true)
+                println("lolos")
+            } catch (e: Exception) {
+                _transactionSubmitted.postValue(false)
+                println("ga lolos")
+            }
+        }
+    }
+
+    fun updateTransaction(transaction: Transaction) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                repository.updateTransaction(transaction)
+                _transactionSubmitted.postValue(true)
+            } catch (e: Exception) {
+                _transactionSubmitted.postValue(false)
+            }
         }
     }
 

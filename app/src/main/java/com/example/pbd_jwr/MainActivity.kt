@@ -6,9 +6,15 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.content.pm.PackageManager
+import android.location.LocationManager
+import android.widget.Toast
+import android.Manifest
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -40,6 +46,10 @@ class MainActivity : AppCompatActivity() {
         sharedPreferencesEditor = sharedPreferences.edit()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (!isLocationPermissionGranted()) {
+            requestLocationPermission()
+        }
 
         val navView: BottomNavigationView = binding.navView
         navView.background=null;
@@ -93,6 +103,54 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun isLocationPermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+//     Request location permission
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
+    }
+
+    // Handle the result of the permission request
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, save the status
+                saveLocationPermissionGranted()
+            } else {
+                // Permission denied, inform the user
+                Toast.makeText(
+                    this,
+                    "Location permission denied. Some functionality may be limited.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun saveLocationPermissionGranted() {
+        val sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("location_permission_granted", true)
+        editor.apply()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         val serviceIntent = Intent(this, JWTValidationService::class.java)
@@ -107,5 +165,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun unregisterNetworkCallback() {
         connectivityManager.unregisterNetworkCallback(networkCallback)
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
     }
 }
