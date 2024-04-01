@@ -52,6 +52,12 @@ android {
 dependencies {
     implementation("androidx.appcompat:appcompat:$rootProject.appCompatVersion")
     implementation("androidx.activity:activity-ktx:$rootProject.activityVersion")
+    implementation("androidx.camera:camera-core:1.3.2")
+    implementation("androidx.camera:camera-lifecycle:1.3.2")
+    implementation("androidx.camera:camera-view:1.3.2")
+    implementation("androidx.compose.ui:ui-android:1.6.4")
+    implementation("androidx.compose.foundation:foundation-android:1.6.4")
+    implementation("androidx.compose.material3:material3-android:1.2.1")
 
     kapt("com.android.databinding:compiler:3.1.4")
 
@@ -117,9 +123,26 @@ dependencies {
     //Encrypted SharedPref
     implementation("androidx.security:security-crypto:1.1.0-alpha03")
 
-    
-    implementation("androidx.room:room-runtime:2.6.1")
 
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation(platform("androidx.compose:compose-bom:2023.09.00"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material:material-icons-extended:1.5.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+
+
+    val cameraxVersion = "1.3.0-rc01"
+
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-video:$cameraxVersion")
+
+    implementation("androidx.camera:camera-view:$cameraxVersion")
+    implementation("androidx.camera:camera-extensions:$cameraxVersion")
 
 }
 
