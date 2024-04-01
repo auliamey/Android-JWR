@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.pbd_jwr.databinding.FragmentSettingsBinding
+import com.example.pbd_jwr.databinding.FragmentScanBinding
 
 class ScanFragment : Fragment() {
 
-    private var _binding: FragmentSettingsBinding? = null
+    private var _binding: FragmentScanBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -25,10 +25,10 @@ class ScanFragment : Fragment() {
         val scanViewModel =
             ViewModelProvider(this)[ScanViewModel::class.java]
 
-        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        _binding = FragmentScanBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textSettings
+        val textView: TextView = binding.textScan
         scanViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }

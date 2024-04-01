@@ -1,13 +1,16 @@
 package com.example.pbd_jwr.ui.settings
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.pbd_jwr.databinding.FragmentSettingsBinding
+import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 
 class SettingsFragment : Fragment() {
 
@@ -17,24 +20,40 @@ class SettingsFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private lateinit var encryptedSharedPref : SharedPreferences;
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        encryptedSharedPref = EncryptedSharedPref.create(requireContext(),"login")
+
         val settingsViewModel =
             ViewModelProvider(this)[SettingsViewModel::class.java]
 
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textSettings
-        settingsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        val subjectEmail : String = "Your history transaction"
+        val contentEmail : String = "This is the list of all your transaction"
+
+        binding.sendEmailButton.setOnClickListener{
+            sendEmailIntent(subjectEmail,contentEmail, encryptedSharedPref.getString("email",""))
         }
+
         return root
     }
 
+    private fun sendEmailIntent(subject : String, content : String, toEmail : String?){
+        val emailIntent : Intent = Intent(Intent.ACTION_SEND);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL,arrayOf(toEmail));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT,subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, content);
+        emailIntent.setType("message/rfcB22");
+        startActivity(Intent.createChooser(emailIntent, "Send email with"))
+
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
