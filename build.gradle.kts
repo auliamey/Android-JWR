@@ -7,7 +7,8 @@ buildscript {
     dependencies {
         val navVersion = "2.7.7"
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion")
-        classpath("com.google.gms:google-services:4.4.1")
+        classpath("com.google.android.gms:play-services-maps:18.2.0")
+
 
 
 //        val androidPluginVersion ="8.3.1"
