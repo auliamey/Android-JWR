@@ -87,7 +87,7 @@
         app:layout_constraintTop_toBottomOf="@id/rememberMe"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:theme="@style/login"
+        android:theme="@style/Theme.login"
         android:text="@string/login"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/press_start_2p"

@@ -151,7 +151,7 @@ dependencies {
     implementation("org.apache.poi:poi:5.2.5")
     implementation("org.apache.poi:poi-ooxml:5.2.5")
 
-
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
 }
 
