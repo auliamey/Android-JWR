@@ -202,7 +202,7 @@ class TransactionAddFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+
     }
 
     companion object {
