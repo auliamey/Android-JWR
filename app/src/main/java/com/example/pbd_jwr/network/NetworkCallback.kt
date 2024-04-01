@@ -10,14 +10,14 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 
 class NetworkCallbackImplementation(private val context: Context) : ConnectivityManager.NetworkCallback() {
-    private var firstLoad = true
+    private var isFirstLoad = true
     override fun onAvailable(network: Network) {
         super.onAvailable(network)
 
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities = connectivityManager.getNetworkCapabilities(network)
 
-        if(!firstLoad){
+        if(!isFirstLoad){
             capabilities?.let {
                 if (it.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
 
@@ -33,12 +33,15 @@ class NetworkCallbackImplementation(private val context: Context) : Connectivity
                 }
             }
         }else{
-            firstLoad = false
+            isFirstLoad = false
         }
     }
 
     override fun onLost(network: Network) {
         super.onLost(network)
+        if(isFirstLoad){
+            isFirstLoad = false
+        }
         Toast.makeText(context, "No internet", Toast.LENGTH_LONG).show()
     }
 

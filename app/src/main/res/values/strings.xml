@@ -10,4 +10,6 @@
     <string name="jwr">JWR</string>
     <string name="logout">logout</string>
     <string name="title_scan">Scan</string>
+    <string name="send_email">Send Email</string>
+    <string name="submit">Submit</string>
 </resources>

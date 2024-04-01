@@ -55,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
             if (passwordRemembered != null && emailRemembered != null) {
                 post(emailRemembered,passwordRemembered,true)
             }
-            return
+
         }
 
         connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager

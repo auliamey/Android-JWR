@@ -2,6 +2,9 @@ package com.example.pbd_jwr.ui.settings
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -10,8 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.example.pbd_jwr.databinding.FragmentSettingsBinding
+import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import com.example.pbd_jwr.ui.transaction.TransactionViewModel
 import com.example.pbd_jwr.data.entity.Transaction
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
@@ -23,32 +27,68 @@ class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
-    private lateinit var transactionViewModel: TransactionViewModel
+    private val transactionViewModel: TransactionViewModel by viewModels()
+    private lateinit var encryptedSharedPref: SharedPreferences
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        encryptedSharedPref = EncryptedSharedPref.create(requireContext(), "login")
 
-        transactionViewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
-
-        binding.saveBtn.setOnClickListener {
-            transactionViewModel.getAllTransactions().observe(viewLifecycleOwner) { transactions ->
-                exportTransactionsToExcel(transactions, requireContext())
-            }
-        }
-
-        return root
+        setupListeners()
+        return binding.root
     }
 
-    private fun exportTransactionsToExcel(transactions: List<Transaction>, context: Context) {
+    private fun setupListeners() {
+        val toEmail = encryptedSharedPref.getString("email", "")
+        binding.sendEmailButton.setOnClickListener {
+            sendEmailWithAttachment(toEmail)
+        }
+
+        binding.saveBtn.setOnClickListener {
+            saveTransactionsToExcel()
+        }
+    }
+
+    private fun sendEmailWithAttachment(toEmail: String?) {
+        val subject = "Comprehensive Account Transaction History Report"
+        val content = """
+            Attached is a comprehensive report detailing all transactions associated with your account. Should you have any questions or require further assistance, please don't hesitate to reach out.
+            
+            Best regards,
+            
+            JWR App
+        """.trimIndent()
+
+        transactionViewModel.getAllTransactions().observe(viewLifecycleOwner) { transactions ->
+            exportTransactionsToExcel(transactions, requireContext())?.let { uri ->
+                val emailIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "vnd.android.cursor.dir/email"
+                    putExtra(Intent.EXTRA_EMAIL, arrayOf(toEmail))
+                    putExtra(Intent.EXTRA_SUBJECT, subject)
+                    putExtra(Intent.EXTRA_TEXT, content)
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                startActivity(Intent.createChooser(emailIntent, "Send email with..."))
+            }
+        }
+    }
+
+    private fun saveTransactionsToExcel() {
+        transactionViewModel.getAllTransactions().observe(viewLifecycleOwner) { transactions ->
+            exportTransactionsToExcel(transactions, requireContext())
+        }
+    }
+
+    private fun exportTransactionsToExcel(transactions: List<Transaction>, context: Context): Uri? {
         val values = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, "Transactions.xlsx") // Nama file
-            put(MediaStore.MediaColumns.MIME_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") // MIME Type
-            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS) // Direktori tujuan
+            put(MediaStore.MediaColumns.DISPLAY_NAME, "Transactions.xlsx")
+            put(MediaStore.MediaColumns.MIME_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
         }
 
         val resolver = context.contentResolver
-        val uri = resolver.insert(MediaStore.Files.getContentUri("external"), values) // Mendapatkan URI
+        val uri = resolver.insert(MediaStore.Files.getContentUri("external"), values)
 
         val workbook = XSSFWorkbook()
 
@@ -79,7 +119,7 @@ class SettingsFragment : Fragment() {
             // Menyimpan file
             uri?.let {
                 resolver.openOutputStream(it).use { outputStream ->
-                    workbook.write(outputStream) // Menulis ke file
+                    workbook.write(outputStream)
                 }
             }
 
@@ -90,8 +130,8 @@ class SettingsFragment : Fragment() {
         } finally {
             workbook.close()
         }
+        return uri
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
