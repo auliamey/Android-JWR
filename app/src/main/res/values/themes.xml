@@ -15,6 +15,8 @@
         <!-- Customize your theme here. -->
         <item name="android:navigationBarColor">#000000</item>
         <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
+
+
     </style>
 
     <style name="ThemeOverlay.Actionbar" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" >
@@ -29,7 +31,7 @@
         <item name="android:textSize">10sp</item>
     </style>
 
-    <style name="login" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.login" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/gold</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/gold</item>
@@ -40,6 +42,9 @@
         <item name="android:windowLightStatusBar">true</item>
         <!-- Customize your theme here. -->
         <item name="android:navigationBarColor">#FFFFFF</item>
+
     </style>
+
+
 
 </resources>
