@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
@@ -25,6 +26,7 @@ import java.io.IOException
 import android.os.Environment
 import android.util.Log
 import androidx.core.content.FileProvider
+import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -37,6 +39,7 @@ class ScanActivity : AppCompatActivity() {
 
     private var imageUri: Uri? = null
     private var currentPhotoPath: String = ""
+    private lateinit var sharedPreferences: SharedPreferences
 
     companion object {
         const val REQUEST_IMAGE_CAPTURE = 1
@@ -50,9 +53,16 @@ class ScanActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan)
 
+        sharedPreferences = EncryptedSharedPref.create(applicationContext,"login")
+
         val scanButton: Button = findViewById(R.id.scanBtn)
         val uploadButton: Button = findViewById(R.id.uploadBtn)
         val sendButton: Button = findViewById(R.id.sendBtn)
+        val backBtn: Button = findViewById(R.id.backBtn)
+
+        backBtn.setOnClickListener {
+            finish()
+        }
 
         scanButton.setOnClickListener {
             checkAndRequestPermissions()
@@ -178,13 +188,13 @@ class ScanActivity : AppCompatActivity() {
 
     @SuppressLint("Recycle")
     private fun uploadImage(imageUri: Uri) {
-        val token = getSharedPreferences("MySharedPref", MODE_PRIVATE).getString("token", "")
-//        if (token.isNullOrEmpty()) {
-//            runOnUiThread {
-//                Toast.makeText(this, "Token tidak ditemukan. Silahkan login terlebih dahulu.", Toast.LENGTH_SHORT).show()
-//            }
-//            return
-//        }
+        val token = sharedPreferences.getString("token", null)
+        if (token.isNullOrEmpty()) {
+            runOnUiThread {
+                Toast.makeText(this, "Token tidak ditemukan. $token.", Toast.LENGTH_SHORT).show()
+            }
+            return
+        }
 
         val bitmap = getBitmapFromUri(imageUri, this)
         if (bitmap != null) {

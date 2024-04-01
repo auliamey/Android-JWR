@@ -24,7 +24,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): AppDatabase {
             val tempInstance = INSTANCE
-            if (tempInstance != null){
+            if (tempInstance != null) {
                 return tempInstance
             }
             synchronized(this) {
@@ -46,17 +46,37 @@ abstract class AppDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 CoroutineScope(Dispatchers.IO).launch {
-                    populateDatabase(database.userDao())
+                    populateDatabase(database.userDao(), database.transactionDao())
                 }
             }
         }
 
-        private suspend fun populateDatabase(userDao: UserDao) {
-            // Contoh data pengguna yang akan disisipkan ke database saat pertama kali dibuat
+        private suspend fun populateDatabase(userDao: UserDao, transactionDao: TransactionDao) {
+            // Seed users
             val user1 = User(fullName = "John Doe", email = "john@example.com")
             val user2 = User(fullName = "Jane Doe", email = "jane@example.com")
             userDao.createUser(user1)
             userDao.createUser(user2)
+
+            // Seed transactions
+            val transaction1 = Transaction(
+                userId = user1.id,
+                title = "Transaction 1",
+                category = "Category 1",
+                amount = 100.0,
+                location = "Location 1",
+                date = System.currentTimeMillis()
+            )
+            val transaction2 = Transaction(
+                userId = user2.id,
+                title = "Transaction 2",
+                category = "Category 2",
+                amount = 200.0,
+                location = "Location 2",
+                date = System.currentTimeMillis()
+            )
+            transactionDao.addTransaction(transaction1)
+            transactionDao.addTransaction(transaction2)
         }
     }
 }
