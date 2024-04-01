@@ -45,12 +45,10 @@ class TransactionFragment : Fragment() {
         }
 
         binding.btnAdd.setOnClickListener {
-            // Navigate to TransactionAddFragment when the button is clicked
             findNavController().navigate(R.id.action_transactionFragment_to_transactionAddFragment)
         }
 
         mTransactionViewModel.getAllTransactions().observe(viewLifecycleOwner, Observer { transactions ->
-            Log.d("Transaction", "${transactions}")
             transactionAdapter.submitList(transactions)
         })
 

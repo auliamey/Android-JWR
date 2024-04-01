@@ -38,6 +38,7 @@ class TransactionAdapter : ListAdapter<Transaction, TransactionAdapter.Transacti
                 }
                 itemView.findNavController().navigate(R.id.action_transactionFragment_to_transactionDetailFragment, bundle)
             }
+
         }
     }
 

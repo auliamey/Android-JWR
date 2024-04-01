@@ -10,4 +10,5 @@
     <color name="gray_dark">#FF5F646D</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray_extralight">#FFECECEC</color>
 </resources>

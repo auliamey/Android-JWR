@@ -42,7 +42,7 @@
         android:src="@drawable/ic_document_scanner_24"
         app:layout_anchor="@id/bottomAppBar"
         app:backgroundTint="@color/gold"
-
+        app:tint="@color/white"
         />
 
     <fragment

@@ -53,19 +53,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"/>
 
-    <!-- Date Field -->
-    <EditText
-        android:id="@+id/editTextDate"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextAmount"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"/>
-
     <!-- Location Field -->
     <EditText
         android:id="@+id/editTextLocation"
@@ -74,7 +61,7 @@
         android:hint="Location"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextDate"
+        app:layout_constraintTop_toBottomOf="@id/editTextAmount"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"/>
@@ -86,9 +73,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit"
-        app:layout_constraintTop_toBottomOf="@id/editTextAmount"
+        app:layout_constraintBottom_toBottomOf="@id/editTextLocation"
+        app:layout_constraintEnd_toEndOf="@id/editTextLocation"
+        app:layout_constraintStart_toStartOf="@id/editTextLocation"
         android:onClick="onSubmitClicked"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"/>
 

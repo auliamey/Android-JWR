@@ -35,8 +35,16 @@ class SettingsFragment : Fragment() {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val subjectEmail : String = "Your history transaction"
-        val contentEmail : String = "This is the list of all your transaction"
+        val subjectEmail : String = "Comprehensive Account Transaction History Report"
+        val contentEmail : String =
+                "Attached is a comprehensive report detailing all transactions associated with your account. Should you have any questions or require further assistance, please don't hesitate to reach out.\n" +
+                "\n" +
+                "Best regards,\n" +
+                "\n" +
+                "JWR App\n" +
+                "\n" +
+                "\n" +
+                "\n"
 
         binding.sendEmailButton.setOnClickListener{
             sendEmailIntent(subjectEmail,contentEmail, encryptedSharedPref.getString("email",""))
