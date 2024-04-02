@@ -151,8 +151,7 @@ dependencies {
     implementation("org.apache.poi:poi:5.2.5")
     implementation("org.apache.poi:poi-ooxml:5.2.5")
 
-
-
+    implementation("com.androidplot:androidplot-core:1.5.10")
 }
 
 kapt {
