@@ -30,6 +30,7 @@ import com.example.pbd_jwr.ui.transaction.TransactionViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONObject
 import java.util.Date
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,12 +45,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val serviceIntent = Intent(this, JWTValidationService::class.java)
         startService(serviceIntent)
-
-        connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        networkCallback = NetworkCallbackImplementation(this)
-        registerNetworkCallback()
 
         sharedPreferences = EncryptedSharedPref.create(applicationContext,"login")
         sharedPreferencesEditor = sharedPreferences.edit()
@@ -114,6 +112,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        networkCallback = NetworkCallbackImplementation(this)
+        registerNetworkCallback()
+    }
     private fun isLocationPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
             this,
@@ -162,12 +171,15 @@ class MainActivity : AppCompatActivity() {
         editor.apply()
     }
 
+    override fun onPause() {
+        super.onPause()
+        unregisterNetworkCallback()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         val serviceIntent = Intent(this, JWTValidationService::class.java)
         stopService(serviceIntent)
-        unregisterNetworkCallback()
-
     }
 
     private fun registerNetworkCallback() {
@@ -194,7 +206,7 @@ class MainActivity : AppCompatActivity() {
                     val category = "expense"
                     val price = itemObject.getDouble("price")
                     val qty = itemObject.getInt("qty")
-                    val amount = qty * price
+                    val amount = (qty * price * 1000).roundToInt() / 1000.0
                     val latitude = 6.8915
                     val longitude = 107.6107
                     val location = "Latitude: $latitude, Longitude: $longitude"
