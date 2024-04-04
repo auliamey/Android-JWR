@@ -28,6 +28,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.ListView
 import androidx.core.content.FileProvider
+import com.example.pbd_jwr.databinding.ActivityMainBinding
+import com.example.pbd_jwr.databinding.ActivityScanBinding
 import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import com.example.pbd_jwr.ui.transaction.TransactionDummyAdapter
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -44,7 +46,7 @@ class ScanActivity : AppCompatActivity() {
     private var currentPhotoPath: String = ""
     private lateinit var sharedPreferences: SharedPreferences
     var transactionDummyData: String = ""
-
+    private lateinit var binding: ActivityScanBinding
     companion object {
         const val REQUEST_IMAGE_CAPTURE = 1
         const val REQUEST_CAMERA_PERMISSION = 2
@@ -62,16 +64,17 @@ class ScanActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan)
-
+        binding = ActivityScanBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         sharedPreferences = EncryptedSharedPref.create(applicationContext,"login")
 
-        val scanButton: Button = findViewById(R.id.scanBtn)
-        val galleryBtn: Button = findViewById(R.id.galleryBtn)
-        val uploadButton: Button = findViewById(R.id.uploadBtn)
-        val saveBtn: Button = findViewById(R.id.saveTransactionsBtn)
-        val backBtn: Button = findViewById(R.id.backBtn)
+        val scanButton: Button = binding.scanBtn
+        val galleryBtn: Button = binding.galleryBtn
+        val uploadButton: Button = binding.uploadBtn
+        val saveBtn: Button = binding.saveTransactionsBtn
+        val backBtn: Button = binding.backBtn
 
-        val placeholderImage: ImageView = findViewById(R.id.imageView)
+        val placeholderImage: ImageView = binding.imageView
         placeholderImage.setImageResource(R.drawable.baseline_insert_photo_24)
         addDummyTransactions("{\"items\":{\"items\":[{\"name\":\"none\",\"qty\":0,\"price\":0}]}}")
 
