@@ -72,15 +72,10 @@ class ScanActivity : AppCompatActivity() {
         val galleryBtn: Button = binding.galleryBtn
         val uploadButton: Button = binding.uploadBtn
         val saveBtn: Button = binding.saveTransactionsBtn
-        val backBtn: Button = binding.backBtn
 
         val placeholderImage: ImageView = binding.imageView
         placeholderImage.setImageResource(R.drawable.baseline_insert_photo_24)
         addDummyTransactions("{\"items\":{\"items\":[{\"name\":\"none\",\"qty\":0,\"price\":0}]}}")
-
-        backBtn.setOnClickListener {
-            finish()
-        }
 
         scanButton.setOnClickListener {
             checkAndRequestPermissions()
