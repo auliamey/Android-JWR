@@ -1,5 +1,6 @@
 package com.example.pbd_jwr.ui.transaction
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -50,20 +51,19 @@ class TransactionDetailFragment : Fragment(), OnMapReadyCallback {
         if (transaction != null) {
             displayTransactionDetails(transaction)
 
-
             binding.btnBack.setOnClickListener {
                 findNavController().popBackStack()
             }
 
             binding.btnDelete.setOnClickListener {
-                transaction?.let { deleteTransaction(it) }
+                showDeleteConfirmationDialog(transaction)
             }
 
             binding.btnEdit.setOnClickListener {
                 val bundle = Bundle().apply {
                     putParcelable("transaction", transaction)
-                    putLong("transactionId", transaction.id) // Pass the transaction ID
-                    putBoolean("editMode", true) // Set edit mode to true
+                    putLong("transactionId", transaction.id)
+                    putBoolean("editMode", true)
                 }
                 findNavController().navigate(R.id.action_transactionDetailFragment_to_transactionAddFragment, bundle)
             }
@@ -72,7 +72,6 @@ class TransactionDetailFragment : Fragment(), OnMapReadyCallback {
             Toast.makeText(requireContext(), "Transaction not found", Toast.LENGTH_SHORT).show()
             findNavController().popBackStack()
         }
-
 
         return root
     }
@@ -100,6 +99,19 @@ class TransactionDetailFragment : Fragment(), OnMapReadyCallback {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = milliseconds
         return sdf.format(calendar.time)
+    }
+
+    private fun showDeleteConfirmationDialog(transaction: Transaction) {
+        AlertDialog.Builder(requireContext(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+            .setTitle("Delete Transaction")
+            .setMessage("Are you sure you want to delete this transaction?")
+            .setPositiveButton("Yes") { _, _ ->
+                transaction?.let { deleteTransaction(it) }
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun deleteTransaction(transaction: Transaction) {

@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 
 class TransactionViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val readAllTransactions: LiveData<List<Transaction>>
     private val repository: TransactionRepository
 
     private val _transactionSubmitted = MutableLiveData<Boolean>()
@@ -23,7 +22,6 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     init {
         val transactionDao = AppDatabase.getDatabase(application).transactionDao()
         repository = TransactionRepository(transactionDao)
-        readAllTransactions = repository.getAllTransactions()
     }
     fun getAllTransactions(): LiveData<List<Transaction>> {
         return repository.getAllTransactions()

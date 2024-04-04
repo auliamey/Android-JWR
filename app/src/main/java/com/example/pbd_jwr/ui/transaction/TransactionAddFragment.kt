@@ -54,6 +54,14 @@ class TransactionAddFragment : Fragment() {
         _binding = FragmentTransactionAddBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        mTransactionViewModel.transactionSubmitted.observe(viewLifecycleOwner) { success ->
+            if (success) {
+                Toast.makeText(requireContext(), "Transaction submitted successfully", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Transaction submission failed", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         val filter = IntentFilter(TransactionAddFragment.ACTION_RANDOMIZE_TRANSACTION)
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(randomizeTransactionReceiver, filter)
 

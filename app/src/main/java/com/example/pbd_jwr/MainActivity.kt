@@ -131,7 +131,6 @@ class MainActivity : AppCompatActivity() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-//     Request location permission
     private fun requestLocationPermission() {
         ActivityCompat.requestPermissions(
             this,
