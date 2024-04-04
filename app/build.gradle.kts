@@ -114,7 +114,9 @@ dependencies {
     testImplementation("org.mockito:mockito-core:3.12.4")
 
     // Location
-    implementation("com.google.android.gms:play-services-location:18.0.0")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+
 
 
 

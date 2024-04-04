@@ -4,18 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.pbd_jwr.converters.CategoryConverter
 import com.example.pbd_jwr.data.dao.TransactionDao
-import com.example.pbd_jwr.data.dao.UserDao
 import com.example.pbd_jwr.data.entity.Transaction
-import com.example.pbd_jwr.data.entity.User
+import com.example.pbd_jwr.data.model.Category
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [User::class, Transaction::class], version = 1)
+@Database(entities = [Transaction::class], version = 3)
+@TypeConverters(CategoryConverter::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun userDao(): UserDao
     abstract fun transactionDao(): TransactionDao
 
     companion object {
@@ -34,6 +35,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "app_database"
                 )
                     .addCallback(DatabaseCallback(context))
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 return instance
@@ -46,67 +48,68 @@ abstract class AppDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 CoroutineScope(Dispatchers.IO).launch {
-                    populateDatabase(database.userDao(), database.transactionDao())
+                    populateDatabase(database.transactionDao())
                 }
             }
         }
 
-        private suspend fun populateDatabase(userDao: UserDao, transactionDao: TransactionDao) {
-            // Seed users
-            val user1 = User(fullName = "John Doe", email = "john@example.com")
-            val user2 = User(fullName = "Jane Doe", email = "jane@example.com")
-            userDao.createUser(user1)
-            userDao.createUser(user2)
-
+        private suspend fun populateDatabase(transactionDao: TransactionDao) {
             // Seed transactions
             val transaction1 = Transaction(
-                userId = user1.id,
+                email = "13521103@std.stei.itb.ac.id",
                 title = "Transaction 1",
-                category = "Category 1",
+                category = Category.INCOME,
                 amount = 100.0,
-                location = "Location 1",
+                latitude = -6.2088,
+                longitude = 106.8456,
                 date = System.currentTimeMillis()
             )
             val transaction2 = Transaction(
-                userId = user2.id,
+                email = "13521103@std.stei.itb.ac.id",
                 title = "Transaction 2",
-                category = "Category 2",
+                category = Category.EXPENSE,
                 amount = 200.0,
-                location = "Location 2",
+                latitude = -6.2188,
+                longitude = 106.8399,
                 date = System.currentTimeMillis()
             )
             val transaction3 = Transaction(
-                    userId = user2.id,
-                    title = "Transaction 3",
-                    category = "Category 3",
-                    amount = 300.0,
-                    location = "Location 3",
-                    date = System.currentTimeMillis()
+                email = "13521103@std.stei.itb.ac.id",
+                title = "Transaction 3",
+                category = Category.INCOME,
+                amount = 300.0,
+                latitude = -6.2024,
+                longitude = 106.8247,
+                date = System.currentTimeMillis()
             )
             val transaction4 = Transaction(
-                    userId = user2.id,
-                    title = "Transaction 4",
-                    category = "Category 4",
-                    amount = 400.0,
-                    location = "Location 4",
-                    date = System.currentTimeMillis()
+                email = "13521103@std.stei.itb.ac.id",
+                title = "Transaction 4",
+                category = Category.EXPENSE,
+                amount = 400.0,
+                latitude = -6.2426,
+                longitude = 106.8000,
+                date = System.currentTimeMillis()
             )
             val transaction5 = Transaction(
-                    userId = user1.id,
-                    title = "Transaction 5",
-                    category = "Category 5",
-                    amount = 500.0,
-                    location = "Location 5",
-                    date = System.currentTimeMillis()
+                email = "13521103@std.stei.itb.ac.id",
+                title = "Transaction 5",
+                category = Category.EXPENSE,
+                amount = 500.0,
+                latitude = -6.2787,
+                longitude = 106.8467,
+                date = System.currentTimeMillis()
             )
             val transaction6 = Transaction(
-                    userId = user1.id,
-                    title = "Transaction 6",
-                    category = "Category 6",
-                    amount = 600.0,
-                    location = "Location 6",
-                    date = System.currentTimeMillis()
+                email = "13521103@std.stei.itb.ac.id",
+                title = "Transaction 6",
+                category = Category.INCOME,
+                amount = 600.0,
+                latitude = -6.2475,
+                longitude = 107.1485,
+                date = System.currentTimeMillis()
             )
+
             transactionDao.addTransaction(transaction1)
             transactionDao.addTransaction(transaction2)
             transactionDao.addTransaction(transaction3)

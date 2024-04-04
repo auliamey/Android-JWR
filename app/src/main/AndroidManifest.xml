@@ -37,6 +37,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCY4EHrVn_0agFwVs8q2F5wyx55pt-eJF4" />
+
+        <receiver
+            android:name=".TransactionAddFragment"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.pbd_jwr.RANDOMIZE_TRANSACTION" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".MainActivity"
             android:exported="true"
