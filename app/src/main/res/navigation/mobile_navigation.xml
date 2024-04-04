@@ -13,28 +13,34 @@
 
         <action
             android:id="@+id/action_transactionFragment_to_transactionDetailFragment"
-            app:destination="@id/navigation_transaction_detail" />
+            app:destination="@id/navigation_transaction_detail"
+            android:label="Transaction Detail"
+            />
 
         <action
             android:id="@+id/action_transactionFragment_to_transactionAddFragment"
-            app:destination="@id/navigation_transaction_add" />
+            app:destination="@id/navigation_transaction_add"
+            android:label="Add Transaction"
+            />
     </fragment>
 
     <fragment
     android:id="@+id/navigation_transaction_detail"
     android:name="com.example.pbd_jwr.ui.transaction.TransactionDetailFragment"
-    android:label=""
+    android:label="Detail Transaction"
     tools:layout="@layout/fragment_transaction_detail">
 
         <action
             android:id="@+id/action_transactionDetailFragment_to_transactionAddFragment"
-            app:destination="@id/navigation_transaction_add" />
+            app:destination="@id/navigation_transaction_add"
+            android:label="Add Transaction"
+            />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_transaction_add"
         android:name="com.example.pbd_jwr.ui.transaction.TransactionAddFragment"
-        android:label=""
+        android:label="Add Transaction"
         tools:layout="@layout/fragment_transaction_add" />
 
 
@@ -60,5 +66,5 @@
     <fragment
         android:id="@+id/navigation_twibbon"
         android:name="com.example.pbd_jwr.ui.twibbon.TwibbonFragment"
-        android:label="fragment_twibbon" />
+        android:label="Twibbon" />
 </navigation>

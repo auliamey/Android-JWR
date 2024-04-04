@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"
+    android:overScrollMode="never"
+    >
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".ui.settings.SettingsFragment"
-    android:paddingBottom="50dp"
+    android:paddingBottom="20dp"
 
     >
 
@@ -13,9 +20,9 @@
         android:id="@+id/sendEmailButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:drawableEnd="@drawable/baseline_email_24"
-        android:paddingHorizontal="50dp"
+        android:paddingHorizontal="20dp"
         android:text="@string/send_email"
         app:layout_constraintBottom_toTopOf="@+id/saveBtn"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -29,21 +36,17 @@
         android:layout_height="wrap_content"
         android:text="@string/save"
         app:layout_constraintTop_toBottomOf="@id/sendEmailButton"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintVertical_bias="0.221" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/twibbonButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/twibbon"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintTop_toBottomOf="@+id/saveBtn"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintVertical_bias="0.024"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/randomTransactionBtn"
@@ -52,7 +55,7 @@
         android:text="@string/randomizetransaction"
         app:layout_constraintTop_toBottomOf="@id/twibbonButton"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintVertical_bias="0.233" />
+        app:layout_constraintRight_toRightOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

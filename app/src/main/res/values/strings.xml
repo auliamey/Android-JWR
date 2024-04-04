@@ -15,4 +15,9 @@
     <string name="save">Save</string>
     <string name="randomizetransaction">RandomizeTransaction</string>
     <string name="twibbon">Twibbon</string>
+    <string name="longitude">Longitude</string>
+    <string name="latitude">Latitude</string>
+    <string name="amount">Amount</string>
+    <string name="title">Title</string>
+    <string name="back">Back</string>
 </resources>
