@@ -4,16 +4,20 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.example.pbd_jwr.converters.CategoryConverter
+import com.example.pbd_jwr.data.model.Category
 
 @Parcelize
 @Entity(tableName = "transaction")
 data class Transaction(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val userId: Long,
+    val email: String,
     val title: String,
-    val category: String,
+    @TypeConverters(CategoryConverter::class)
+    val category: Category,
     val amount: Double,
-    val location: String,
+    val latitude: Double,
+    val longitude: Double,
     val date: Long
-):  Parcelable
-
+): Parcelable

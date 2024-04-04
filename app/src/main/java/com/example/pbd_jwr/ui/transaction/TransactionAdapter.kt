@@ -28,7 +28,7 @@ class TransactionAdapter : ListAdapter<Transaction, TransactionAdapter.Transacti
         fun bind(transaction: Transaction) {
             with(binding) {
                 textViewTitle.text = transaction.title
-                textViewCategory.text = transaction.category
+                textViewCategory.text = transaction.category.toString()
                 textViewAmount.text = transaction.amount.toString()
             }
 

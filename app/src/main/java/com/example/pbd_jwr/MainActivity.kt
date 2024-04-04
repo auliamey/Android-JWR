@@ -23,6 +23,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.pbd_jwr.backgroundService.JWTValidationService
 import com.example.pbd_jwr.data.entity.Transaction
+import com.example.pbd_jwr.data.model.Category
 import com.example.pbd_jwr.databinding.ActivityMainBinding
 import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import com.example.pbd_jwr.network.NetworkCallbackImplementation
@@ -192,6 +193,10 @@ class MainActivity : AppCompatActivity() {
 
     private val startScanActivityForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
+
+            sharedPreferences = EncryptedSharedPref.create(applicationContext, "login")
+            val currentUserEmail = sharedPreferences.getString("email", "") ?: ""
+
             val data = result.data
             val transactionDummyData = data?.getStringExtra("transactionDummyData")
 
@@ -203,7 +208,7 @@ class MainActivity : AppCompatActivity() {
                 for (i in 0 until itemsArray.length()) {
                     val itemObject = itemsArray.getJSONObject(i)
                     val name = itemObject.getString("name")
-                    val category = "expense"
+                    val category = Category.EXPENSE
                     val price = itemObject.getDouble("price")
                     val qty = itemObject.getInt("qty")
                     val amount = (qty * price * 1000).roundToInt() / 1000.0
@@ -212,7 +217,7 @@ class MainActivity : AppCompatActivity() {
                     val location = "Latitude: $latitude, Longitude: $longitude"
                     val date = Date().time
 
-                    mTransactionViewModel.addTransaction(Transaction(userId = 1, title = name, category = category, amount = amount, location = location, date = date))
+                    mTransactionViewModel.addTransaction(Transaction(email = currentUserEmail, title = name, category = category, amount = amount, latitude = latitude, longitude = longitude, date = date))
                 }
 
 

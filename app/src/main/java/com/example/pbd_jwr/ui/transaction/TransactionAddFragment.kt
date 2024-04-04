@@ -1,19 +1,30 @@
 package com.example.pbd_jwr.ui.transaction
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.SharedPreferences
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.pbd_jwr.data.entity.Transaction
+import com.example.pbd_jwr.data.model.Category
 import com.example.pbd_jwr.databinding.FragmentTransactionAddBinding
+import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationRequest
@@ -30,6 +41,9 @@ class TransactionAddFragment : Fragment() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private lateinit var encryptedSharedPref: SharedPreferences
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,11 +54,28 @@ class TransactionAddFragment : Fragment() {
         _binding = FragmentTransactionAddBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Inisialisasi FusedLocationProviderClient
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        val filter = IntentFilter(TransactionAddFragment.ACTION_RANDOMIZE_TRANSACTION)
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(randomizeTransactionReceiver, filter)
 
-        // Menampilkan lokasi saat ini di EditText
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         showCurrentLocation()
+
+        val spinnerCategory = binding.spinnerCategory
+        val categories = arrayOf(Category.INCOME, Category.EXPENSE)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerCategory.adapter = adapter
+
+        spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedCategory = categories[position]
+                Toast.makeText(requireContext(), "Selected category: $selectedCategory", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Handle jika tidak ada item yang dipilih
+            }
+        }
 
         binding.btnSubmit.setOnClickListener {
             onSubmitClicked()
@@ -54,15 +85,45 @@ class TransactionAddFragment : Fragment() {
         if (editMode) {
             val transaction = arguments?.getParcelable<Transaction>("transaction")
             transaction?.let {
+                val latitude = it.latitude
+                val longitude = it.longitude
+                val latitudeString = "$latitude"
+                val longitudeString = "$longitude"
+
                 binding.editTextTitle.setText(it.title)
-                binding.editTextCategory.setText(it.category)
                 binding.editTextAmount.setText(it.amount.toString())
-                binding.editTextLocation.setText(it.location)
+                binding.editTextLatitude.setText(latitudeString)
+                binding.editTextLongitude.setText(longitudeString)
+
+                val category = it.category
+                if (category != null) {
+                    val categoryIndex = categories.indexOf(category)
+                    if (categoryIndex != -1) {
+                        spinnerCategory.setSelection(categoryIndex)
+                    }
+                }
             }
         }
 
 
         return root
+    }
+
+    private fun handleRandomizeTransaction() {
+        val editMode = arguments?.getBoolean("editMode", false) ?: false
+        if (!editMode) {
+            println("random random")
+            fillRandomField()
+        }
+    }
+
+    private val randomizeTransactionReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            println("Intent diterima oleh broadcast receiver")
+            if (intent?.action == "com.example.pbd_jwr.RANDOMIZE_TRANSACTION") {
+                handleRandomizeTransaction()
+            }
+        }
     }
 
     private fun showCurrentLocation() {
@@ -71,59 +132,31 @@ class TransactionAddFragment : Fragment() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            println("granted")
-            // Jika izin diberikan, dapatkan lokasi saat ini
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location ->
-                    // Jika lokasi berhasil didapatkan, set nilai EditText lokasi
                     location?.let {
                         val latitude = it.latitude
                         val longitude = it.longitude
+                        val latitudeString = "$latitude"
+                        val longitudeString = "$longitude"
                         val currentLocation = "Latitude: $latitude, Longitude: $longitude"
-                        println(currentLocation)
-                        binding.editTextLocation.setText(currentLocation)
+                        binding.editTextLatitude.setText(latitudeString)
+                        binding.editTextLongitude.setText(longitudeString)
                     }
                 }
                 .addOnFailureListener { e ->
-                    // Jika gagal mendapatkan lokasi, tampilkan pesan kesalahan
-                    println("haha")
                     Toast.makeText(
                         requireContext(),
                         "Failed to get location: ${e.message}",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
-            val locationRequest = LocationRequest.create().apply {
-                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-                interval = 10000 // Interval pembaruan lokasi dalam milidetik (contoh: 10 detik)
-                fastestInterval = 5000 // Interval tercepat untuk pembaruan lokasi dalam milidetik (contoh: 5 detik)
-            }
-
-            // Meminta pembaruan lokasi secara real-time
-            fusedLocationClient.requestLocationUpdates(
-                locationRequest,
-                object : LocationCallback() {
-                    override fun onLocationResult(locationResult: LocationResult) {
-                        super.onLocationResult(locationResult)
-                        // Mendapatkan lokasi saat ini dari locationResult
-                        val lastLocation = locationResult.lastLocation
-                        val latitude = lastLocation.latitude
-                        val longitude = lastLocation.longitude
-                        val currentLocation = "Latitude: $latitude, Longitude: $longitude"
-                        binding.editTextLocation.setText(currentLocation)
-                    }
-                },
-                null
-            )
         } else {
-            println("not granted")
-            // Jika izin lokasi belum diberikan, minta izin
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
+            val latitude = "6.8915"
+            val longitude = "107.6107"
+            val currentLocation = "Latitude: $latitude, Longitude: $longitude"
+            binding.editTextLatitude.setText(latitude)
+            binding.editTextLongitude.setText(longitude)
         }
     }
 
@@ -136,10 +169,8 @@ class TransactionAddFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Izin lokasi diberikan, panggil showCurrentLocation untuk menampilkan lokasi
                 showCurrentLocation()
             } else {
-                // Izin lokasi ditolak, tampilkan pesan kesalahan
                 Toast.makeText(
                     requireContext(),
                     "Location permission denied. Some functionality may be limited.",
@@ -153,59 +184,80 @@ class TransactionAddFragment : Fragment() {
     private fun onSubmitClicked() {
 
         val title = binding.editTextTitle.text.toString().trim()
-        val category = binding.editTextCategory.text.toString().trim()
         val amountString = binding.editTextAmount.text.toString().trim()
-        val location = binding.editTextLocation.text.toString().trim()
+        val latitudeString = binding.editTextLatitude.text.toString().trim() // Ambil nilai latitude dari EditText
+        val longitudeString = binding.editTextLongitude.text.toString().trim()
+
+        val category = binding.spinnerCategory.selectedItem as Category
 
         // Validate input fields
-        if (title.isEmpty() || category.isEmpty() || amountString.isEmpty() || location.isEmpty()) {
+        if (title.isEmpty() || amountString.isEmpty() || latitudeString.isEmpty() || longitudeString.isEmpty()) {
             showError("All fields are required")
             return
         }
 
+        // Validate category
+        if (category == null) {
+            showError("Please select a category")
+            return
+        }
+
         val amount = amountString.toDoubleOrNull()
-        if (amount == null || amount <= 0) {
-            showError("Invalid amount")
+        val latitude = latitudeString.toDoubleOrNull()
+        val longitude = longitudeString.toDoubleOrNull()
+
+        if (amount == null || amount <= 0 || latitude == null || longitude == null) {
+            showError("Invalid amount , latitude, or longitude")
             return
         }
 
         val date = Date().time
-
-
         val editMode = arguments?.getBoolean("editMode", false) ?: false
-        println("editMode")
-        println(editMode)
+
+        encryptedSharedPref = EncryptedSharedPref.create(requireContext(), "login")
+        val currentUserEmail = encryptedSharedPref.getString("email", "") ?: ""
+
         if (editMode) {
-            // Editing mode
             val transactionId = arguments?.getLong("transactionId", -1L) ?: -1L
-            editTransaction(transactionId, title, category, amount, location, date)
+            editTransaction(transactionId, title, category, amount, latitude, longitude, date, currentUserEmail)
             findNavController().popBackStack()
         } else {
-            // Adding mode
-            addTransaction(title, category, amount, location, date)
+            addTransaction(title, category, amount, latitude, longitude, date, currentUserEmail)
         }
 
         findNavController().popBackStack()
     }
 
-    private fun addTransaction(title: String, category: String, amount: Double, location: String, date: Long) {
-        mTransactionViewModel.addTransaction(Transaction(userId = 1, title = title, category = category, amount = amount, location = location, date = date))
+    private fun addTransaction(title: String, category: Category, amount: Double, latitude: Double, longitude: Double, date: Long, email: String) {
+        mTransactionViewModel.addTransaction(Transaction(title = title, category = category, amount = amount, latitude = latitude, longitude = longitude, date = date, email = email))
     }
 
-    private fun editTransaction(transactionId: Long, title: String, category: String, amount: Double, location: String, date: Long) {
-        mTransactionViewModel.updateTransaction(Transaction(transactionId, userId = 1, title = title, category = category, amount = amount, location = location, date = date))
+    private fun editTransaction(transactionId: Long, title: String, category: Category, amount: Double, latitude: Double, longitude: Double, date: Long, currentUserEmail: String) {
+        mTransactionViewModel.updateTransaction(Transaction(id = transactionId, title = title, category = category, amount = amount, latitude = latitude, longitude = longitude, date = date, email = currentUserEmail))
     }
 
     private fun showError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
+    private fun fillRandomField() {
+        val randomTitle = generateRandomTitle()
+        binding.editTextTitle.setText(randomTitle)
+    }
+
+    private fun generateRandomTitle(): String {
+        return "Random Transaction ${System.currentTimeMillis()}"
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
 
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(randomizeTransactionReceiver)
     }
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
+        const val ACTION_RANDOMIZE_TRANSACTION = "com.example.pbd_jwr.RANDOMIZE_TRANSACTION"
     }
+
 }

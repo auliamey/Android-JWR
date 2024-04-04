@@ -26,9 +26,7 @@ package com.example.pbd_jwr
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.pbd_jwr.data.dao.UserDao
 import com.example.pbd_jwr.data.database.AppDatabase
-import com.example.pbd_jwr.data.entity.User
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before

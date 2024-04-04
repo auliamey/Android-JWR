@@ -29,17 +29,17 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         return repository.getAllTransactions()
     }
 
-
+    fun getTransactionsByEmail(email: String): LiveData<List<Transaction>> {
+        return repository.getTransactionsByEmail(email)
+    }
 
     fun addTransaction(transaction: Transaction) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 repository.addTransaction(transaction)
                 _transactionSubmitted.postValue(true)
-                println("lolos")
             } catch (e: Exception) {
                 _transactionSubmitted.postValue(false)
-                println("ga lolos")
             }
         }
     }

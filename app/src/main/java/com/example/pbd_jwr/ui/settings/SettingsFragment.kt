@@ -3,6 +3,7 @@ package com.example.pbd_jwr.ui.settings
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
@@ -50,6 +51,14 @@ class SettingsFragment : Fragment() {
             saveTransactionsToExcel()
         }
 
+        val randomizeButton = binding.randomTransactionBtn
+        randomizeButton.setOnClickListener {
+            val intent = Intent()
+            intent.setAction("com.example.pbd_jwr.RANDOMIZE_TRANSACTION")
+
+            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
+        }
+
         binding.twibbonButton.setOnClickListener {
             findNavController().navigate(R.id.action_settingsFragment_to_twibbonFragment)
         }
@@ -59,9 +68,9 @@ class SettingsFragment : Fragment() {
         val subject = "Comprehensive Account Transaction History Report"
         val content = """
             Attached is a comprehensive report detailing all transactions associated with your account. Should you have any questions or require further assistance, please don't hesitate to reach out.
-            
+
             Best regards,
-            
+
             JWR App
         """.trimIndent()
 
@@ -107,7 +116,8 @@ class SettingsFragment : Fragment() {
             header.createCell(1).setCellValue("Kategori Transaksi")
             header.createCell(2).setCellValue("Nominal Transaksi")
             header.createCell(3).setCellValue("Nama Transaksi")
-            header.createCell(4).setCellValue("Lokasi")
+            header.createCell(4).setCellValue("Latitude")
+            header.createCell(5).setCellValue("Longitude")
 
             // Format tanggal
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -116,10 +126,11 @@ class SettingsFragment : Fragment() {
             transactions.forEachIndexed { index, transaction ->
                 val row = sheet.createRow(index + 1)
                 row.createCell(0).setCellValue(dateFormat.format(transaction.date))
-                row.createCell(1).setCellValue(transaction.category)
+                row.createCell(1).setCellValue(transaction.category.toString())
                 row.createCell(2).setCellValue(transaction.amount)
                 row.createCell(3).setCellValue(transaction.title)
-                row.createCell(4).setCellValue(transaction.location)
+                row.createCell(4).setCellValue(transaction.latitude)
+                row.createCell(5).setCellValue(transaction.longitude)
             }
 
             // Menyimpan file

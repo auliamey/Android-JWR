@@ -1,5 +1,6 @@
 package com.example.pbd_jwr.ui.transaction
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pbd_jwr.databinding.FragmentTransactionBinding
 import com.example.pbd_jwr.R
+import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 
 class TransactionFragment : Fragment() {
 
@@ -21,17 +23,21 @@ class TransactionFragment : Fragment() {
     private lateinit var mTransactionViewModel: TransactionViewModel
     private lateinit var transactionAdapter: TransactionAdapter
 
+    private lateinit var encryptedSharedPref: SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         _binding = FragmentTransactionBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         mTransactionViewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
 
-
+        encryptedSharedPref = EncryptedSharedPref.create(requireContext(), "login")
+        val currentUserEmail = encryptedSharedPref.getString("email", "") ?: ""
 
         mTransactionViewModel.getAllTransactions().observe(viewLifecycleOwner, Observer { transactions ->
             transactions.forEach { transaction ->
@@ -50,7 +56,7 @@ class TransactionFragment : Fragment() {
             findNavController().navigate(R.id.action_transactionFragment_to_transactionAddFragment)
         }
 
-        mTransactionViewModel.getAllTransactions().observe(viewLifecycleOwner, Observer { transactions ->
+        mTransactionViewModel.getTransactionsByEmail(currentUserEmail).observe(viewLifecycleOwner, Observer { transactions ->
             transactionAdapter.submitList(transactions)
         })
 
