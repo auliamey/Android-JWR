@@ -140,7 +140,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
 
 
-    val cameraxVersion = "1.3.0-rc01"
+    val cameraxVersion = "1.3.2"
 
     implementation("androidx.camera:camera-core:$cameraxVersion")
     implementation("androidx.camera:camera-camera2:$cameraxVersion")
@@ -153,7 +153,8 @@ dependencies {
     implementation("org.apache.poi:poi:5.2.5")
     implementation("org.apache.poi:poi-ooxml:5.2.5")
 
-
+    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
 }
 

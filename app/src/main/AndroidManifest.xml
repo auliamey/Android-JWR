@@ -29,7 +29,7 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:theme="@style/login"
+            android:theme="@style/Theme.SplashTheme"
             >
 
             <intent-filter>
@@ -57,7 +57,8 @@
 
         </activity>
         <activity android:name=".ScanActivity"
-            android:exported="false">
+            android:exported="false"
+            >
         </activity>
 
         <meta-data
@@ -68,7 +69,8 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="JWR.provider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />

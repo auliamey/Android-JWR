@@ -53,4 +53,12 @@
         android:name="com.example.pbd_jwr.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
+    <action
+        android:id="@+id/action_settingsFragment_to_twibbonFragment"
+        app:destination="@id/navigation_twibbon" />
+
+    <fragment
+        android:id="@+id/navigation_twibbon"
+        android:name="com.example.pbd_jwr.ui.twibbon.TwibbonFragment"
+        android:label="fragment_twibbon" />
 </navigation>

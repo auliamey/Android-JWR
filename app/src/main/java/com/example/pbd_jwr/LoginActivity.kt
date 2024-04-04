@@ -11,6 +11,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.pbd_jwr.databinding.ActivityLoginBinding
 import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import com.example.pbd_jwr.network.NetworkCallbackImplementation
@@ -40,12 +41,15 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var connectivityManager: ConnectivityManager
     private lateinit var networkCallback: NetworkCallbackImplementation
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
+        installSplashScreen()
 
         sharedPreferences = EncryptedSharedPref.create(applicationContext,"login")
         // Check if the user credential is already stored
+        connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        networkCallback = NetworkCallbackImplementation(this)
 
+        registerNetworkCallback()
 
         if (isLoggedIn()) {
             // If the user credential is stored, login and start the MainActivity
@@ -58,9 +62,8 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
-        connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-        networkCallback = NetworkCallbackImplementation(this)
-        registerNetworkCallback()
+
+
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -97,11 +100,20 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        registerNetworkCallback()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterNetworkCallback()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        if(!isLoggedIn()){
-            unregisterNetworkCallback()
-        }
+
+        unregisterNetworkCallback()
     }
 
     private fun isLoggedIn(): Boolean {

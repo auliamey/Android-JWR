@@ -1,7 +1,6 @@
 package com.example.pbd_jwr.ui.transaction
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +12,6 @@ import com.example.pbd_jwr.data.entity.Transaction
 import com.example.pbd_jwr.data.repository.TransactionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Locale.Category
 
 class TransactionViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -23,15 +21,9 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     private val _transactionSubmitted = MutableLiveData<Boolean>()
     val transactionSubmitted: LiveData<Boolean> = _transactionSubmitted
     init {
-        println("masuk init")
         val transactionDao = AppDatabase.getDatabase(application).transactionDao()
         repository = TransactionRepository(transactionDao)
         readAllTransactions = repository.getAllTransactions()
-
-        readAllTransactions.observeForever { transactions ->
-            // Log the list of transactions whenever it changes
-            println("All Transactions: $transactions")
-        }
     }
     fun getAllTransactions(): LiveData<List<Transaction>> {
         return repository.getAllTransactions()
@@ -42,15 +34,14 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun addTransaction(transaction: Transaction) {
-//        val transactionWithEmail = transaction.copy(email = email)
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 repository.addTransaction(transaction)
-                println("berhasil")
                 _transactionSubmitted.postValue(true)
+                println("lolos")
             } catch (e: Exception) {
-                println("ga berhasil")
                 _transactionSubmitted.postValue(false)
+                println("ga lolos")
             }
         }
     }

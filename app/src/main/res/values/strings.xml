@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PBD-JWR</string>
+    <string name="app_name">BondoMan</string>
     <string name="title_transaction">Transaction</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_settings">Settings</string>

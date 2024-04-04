@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:plot="http://schemas.android.com/apk/res-auto">
+
+    <stroke
+        android:color="@android:color/black"
+        android:width="2dp"/>
+
+    <fill
+        android:color="@android:color/holo_blue_light"/>
+
+<!--    <radialEdgeEffect-->
+<!--        android:color="@android:color/white"-->
+<!--        plot:innerRadius="0dp"-->
+<!--        plot:outerRadius="10dp"/>-->
+
+</config>
