@@ -38,10 +38,8 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             try {
                 repository.addTransaction(transaction)
                 _transactionSubmitted.postValue(true)
-                println("lolos")
             } catch (e: Exception) {
                 _transactionSubmitted.postValue(false)
-                println("ga lolos")
             }
         }
     }

@@ -91,6 +91,8 @@ dependencies {
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine")
 
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
     // UI
     implementation("androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion")
     implementation("com.google.android.material:material:$rootProject.materialVersion")
@@ -116,8 +118,6 @@ dependencies {
     // Location
     implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
-
-
 
 
     //okHttp

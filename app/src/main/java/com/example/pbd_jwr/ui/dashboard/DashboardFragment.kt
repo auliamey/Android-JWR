@@ -54,8 +54,12 @@ class DashboardFragment : Fragment() {
 
         val entries = ArrayList<PieEntry>()
         for ((category, total) in totalPerCategory) {
-            entries.add(PieEntry(total.toFloat(),
-                category.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }))
+            entries.add(
+                PieEntry(
+                    total.toFloat(),
+                    category.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+                )
+            )
         }
 
         val dataSet = PieDataSet(entries, "Categories")
