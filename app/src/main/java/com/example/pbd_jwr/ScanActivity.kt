@@ -59,7 +59,6 @@ class ScanActivity : AppCompatActivity() {
     )
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan)
@@ -142,6 +141,8 @@ class ScanActivity : AppCompatActivity() {
                 resultIntent.putExtra("transactionDummyData", transactionDummyData)
                 setResult(Activity.RESULT_OK, resultIntent)
                 dialog.dismiss()
+
+
                 finish()
             }
 
@@ -323,6 +324,28 @@ class ScanActivity : AppCompatActivity() {
             }
         }
         return transactions
+    }
+
+    private fun deleteImageFile() {
+        imageUri?.let { uri ->
+            try {
+                val contentResolver = applicationContext.contentResolver
+                val deleteSuccess = contentResolver.delete(uri, null, null) > 0
+                if (deleteSuccess) {
+                    Log.d("ScanActivity", "Image deleted successfully.")
+                } else {
+                    Log.d("ScanActivity", "Failed to delete image.")
+                }
+            } catch (e: Exception) {
+                Log.e("ScanActivity", "Error deleting image", e)
+            }
+        }
+    }
+
+
+    override fun finish() {
+        deleteImageFile()
+        super.finish()
     }
 
     @Deprecated("Deprecated in Java")

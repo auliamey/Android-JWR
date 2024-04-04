@@ -14,6 +14,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.pbd_jwr.R
 import com.example.pbd_jwr.databinding.FragmentSettingsBinding
 import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import com.example.pbd_jwr.ui.transaction.TransactionViewModel
@@ -46,6 +48,10 @@ class SettingsFragment : Fragment() {
 
         binding.saveBtn.setOnClickListener {
             saveTransactionsToExcel()
+        }
+
+        binding.twibbonButton.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFragment_to_twibbonFragment)
         }
     }
 
