@@ -145,6 +145,7 @@
         android:text="Delete"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="5dp"
 
         />
 
@@ -158,6 +159,7 @@
         android:text="Edit"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="5dp"
 
         android:drawableEnd="@drawable/baseline_edit_square_24"
         />
