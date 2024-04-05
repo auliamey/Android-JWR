@@ -44,9 +44,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val serviceIntent = Intent(this, JWTValidationService::class.java)
-        startService(serviceIntent)
-
         sharedPreferences = EncryptedSharedPref.create(applicationContext,"login")
         sharedPreferencesEditor = sharedPreferences.edit()
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -128,6 +125,8 @@ class MainActivity : AppCompatActivity() {
         connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         networkCallback = NetworkCallbackImplementation(this)
         registerNetworkCallback()
+        val serviceIntent = Intent(this, JWTValidationService::class.java)
+        startService(serviceIntent)
     }
     private fun isLocationPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
@@ -180,12 +179,13 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         unregisterNetworkCallback()
+        val serviceIntent = Intent(this, JWTValidationService::class.java)
+        stopService(serviceIntent)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        val serviceIntent = Intent(this, JWTValidationService::class.java)
-        stopService(serviceIntent)
+
     }
 
     private fun registerNetworkCallback() {

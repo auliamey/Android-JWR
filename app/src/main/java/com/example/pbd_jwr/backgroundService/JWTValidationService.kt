@@ -28,7 +28,7 @@ import kotlin.math.log
 class JWTValidationService : Service() {
     private lateinit var handler: Handler
     private lateinit var runnable: Runnable
-    private val INTERVAL: Long =  5 * 60 * 1000 // 5 minutes in milliseconds
+    private val INTERVAL: Long =  3 * 60 * 1000 // 2 minutes in milliseconds
 
     private  var client = OkHttpClient()
     private val validateTokenURL = "https://pbd-backend-2024.vercel.app/api/auth/token"
@@ -76,7 +76,7 @@ class JWTValidationService : Service() {
             override fun onFailure(call: Call, e: IOException) {
 
                 handler.post{
-                    Toast.makeText(applicationContext, "Failed to re-login", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Connection error", Toast.LENGTH_SHORT).show()
                 }
 
 
@@ -97,21 +97,23 @@ class JWTValidationService : Service() {
                                 val password = sharedPreferences.getString("password","")
                                 var isRememberTemp = sharedPreferences.getString("isRemember","")
                                 var isRemember = false
-                                if (isRememberTemp == "true"){
-                                    isRemember = true
-                                }else{
-                                    isRemember = false
-                                }
+                                isRemember = isRememberTemp == "true"
                                 it.close()
                                 if (email != null && password != null) {
                                     post(email,password,isRemember)
+                                    handler.post{
+                                        Toast.makeText(applicationContext,"Re-login success", Toast.LENGTH_SHORT).show()
+                                    }
+                                } else {
+                                    handler.post{
+                                        Toast.makeText(applicationContext, "Server Error", Toast.LENGTH_SHORT).show()
+                                    }
                                 }
                             }else{
                                 handler.post{
                                     Toast.makeText(applicationContext,"Token is not exp", Toast.LENGTH_SHORT).show()
                                 }
 
-                                return
                             }
                         } ?: run {
 
@@ -119,7 +121,7 @@ class JWTValidationService : Service() {
 
                     }else{
                         handler.post{
-                            Toast.makeText(applicationContext,"Failed to check token, server error", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(applicationContext,"Failed to check token, Server error", Toast.LENGTH_SHORT).show()
                         }
                     }
 
@@ -127,7 +129,6 @@ class JWTValidationService : Service() {
 
             }
         })
-
 
     }
     fun isTokenExpired(expirationTime: Long): Boolean {
