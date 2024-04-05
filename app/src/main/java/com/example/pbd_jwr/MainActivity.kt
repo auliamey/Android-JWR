@@ -83,7 +83,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         if (!isLocationPermissionGranted()) {
             requestLocationPermission()
         }
@@ -98,19 +97,23 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_transaction, R.id.navigation_dashboard, R.id.navigation_settings
+                R.id.navigation_transaction, R.id.navigation_dashboard, R.id.navigation_settings, R.id.navigation_transaction_add, R.id.navigation_transaction_detail, R.id.navigation_twibbon, R.id.navigation_scan
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
         val fab: FloatingActionButton = binding.fabScan
         fab.setOnClickListener {
-            // Start ScanActivity
-            val intent = Intent(this, ScanActivity::class.java)
-            startScanActivityForResult.launch(intent)
+            // Navigate ScanFragment
+            navController.navigate(R.id.navigation_scan)
+            val menuItem = navView.menu.findItem(R.id.navigation_scan)
+            menuItem.isChecked = true
+
         }
         navView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
+
                 R.id.navigation_transaction -> {
                     // Handle transaction navigation
                     navController.navigate(R.id.navigation_transaction)
@@ -136,6 +139,10 @@ class MainActivity : AppCompatActivity() {
                     finish()
                     true
                 }
+                R.id.navigation_scan->{
+                    navController.navigate(R.id.navigation_scan)
+                    true
+                }
                 else -> false
             }
         }
@@ -152,8 +159,9 @@ class MainActivity : AppCompatActivity() {
         connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         networkCallback = NetworkCallbackImplementation(this)
         registerNetworkCallback()
+        val serviceIntent = Intent(this, JWTValidationService::class.java)
+        startService(serviceIntent)
     }
-
     private fun isLocationPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
             this,
@@ -161,6 +169,7 @@ class MainActivity : AppCompatActivity() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
+//     Request location permission
     private fun requestLocationPermission() {
         ActivityCompat.requestPermissions(
             this,
@@ -204,10 +213,13 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         unregisterNetworkCallback()
+        val serviceIntent = Intent(this, JWTValidationService::class.java)
+        stopService(serviceIntent)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
         val serviceIntent = Intent(this, JWTValidationService::class.java)
         stopService(serviceIntent)
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)

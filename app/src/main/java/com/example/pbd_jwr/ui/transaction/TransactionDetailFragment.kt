@@ -1,6 +1,5 @@
 package com.example.pbd_jwr.ui.transaction
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -51,19 +50,15 @@ class TransactionDetailFragment : Fragment(), OnMapReadyCallback {
         if (transaction != null) {
             displayTransactionDetails(transaction)
 
-            binding.btnBack.setOnClickListener {
-                findNavController().popBackStack()
-            }
-
             binding.btnDelete.setOnClickListener {
-                showDeleteConfirmationDialog(transaction)
+                transaction?.let { deleteTransaction(it) }
             }
 
             binding.btnEdit.setOnClickListener {
                 val bundle = Bundle().apply {
                     putParcelable("transaction", transaction)
-                    putLong("transactionId", transaction.id)
-                    putBoolean("editMode", true)
+                    putLong("transactionId", transaction.id) // Pass the transaction ID
+                    putBoolean("editMode", true) // Set edit mode to true
                 }
                 findNavController().navigate(R.id.action_transactionDetailFragment_to_transactionAddFragment, bundle)
             }

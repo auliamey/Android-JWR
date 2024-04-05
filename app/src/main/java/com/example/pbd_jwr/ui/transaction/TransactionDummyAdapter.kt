@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import com.example.pbd_jwr.ScanActivity
+import com.example.pbd_jwr.ui.scan.ScanFragment
 import com.example.pbd_jwr.databinding.TransactionDummyDetailBinding
 
-class TransactionDummyAdapter(context: Context, transactions: List<ScanActivity.TransactionDummy>) :
-    ArrayAdapter<ScanActivity.TransactionDummy>(context, 0, transactions) {
+class TransactionDummyAdapter(context: Context, transactions: List<ScanFragment.TransactionDummy>) :
+    ArrayAdapter<ScanFragment.TransactionDummy>(context, 0, transactions) {
 
     @SuppressLint("SetTextI18n")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
