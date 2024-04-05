@@ -29,9 +29,6 @@ import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import com.example.pbd_jwr.network.NetworkCallbackImplementation
 import com.example.pbd_jwr.ui.transaction.TransactionViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.json.JSONObject
-import java.util.Date
-import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -74,14 +71,15 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
         val fab: FloatingActionButton = binding.fabScan
         fab.setOnClickListener {
             // Start ScanActivity
-            val intent = Intent(this, ScanActivity::class.java)
-            startScanActivityForResult.launch(intent)
+            navController.navigate(R.id.navigation_scan)
         }
         navView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
+
                 R.id.navigation_transaction -> {
                     // Handle transaction navigation
                     navController.navigate(R.id.navigation_transaction)
@@ -189,40 +187,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun unregisterNetworkCallback() {
         connectivityManager.unregisterNetworkCallback(networkCallback)
-    }
-
-    private val startScanActivityForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-
-            sharedPreferences = EncryptedSharedPref.create(applicationContext, "login")
-            val currentUserEmail = sharedPreferences.getString("email", "") ?: ""
-
-            val data = result.data
-            val transactionDummyData = data?.getStringExtra("transactionDummyData")
-
-            transactionDummyData?.let {
-
-                val jsonObject = JSONObject(transactionDummyData)
-                val itemsArray = jsonObject.getJSONObject("items").getJSONArray("items")
-
-                for (i in 0 until itemsArray.length()) {
-                    val itemObject = itemsArray.getJSONObject(i)
-                    val name = itemObject.getString("name")
-                    val category = Category.EXPENSE
-                    val price = itemObject.getDouble("price")
-                    val qty = itemObject.getInt("qty")
-                    val amount = (qty * price * 1000).roundToInt() / 1000.0
-                    val latitude = 6.8915
-                    val longitude = 107.6107
-                    val location = "Latitude: $latitude, Longitude: $longitude"
-                    val date = Date().time
-
-                    mTransactionViewModel.addTransaction(Transaction(email = currentUserEmail, title = name, category = category, amount = amount, latitude = latitude, longitude = longitude, date = date))
-                }
-
-
-            }
-        }
     }
 
     companion object {

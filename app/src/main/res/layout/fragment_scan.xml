@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ScanActivity">
+    tools:context=".ui.scan.ScanFragment">
 
     <Button
         android:id="@+id/scanBtn"
@@ -46,7 +46,6 @@
         android:layout_width="335dp"
         android:layout_height="335dp"
         android:contentDescription="PreviewImg"
-        app:layout_constraintBottom_toTopOf="@+id/listDummyTransaction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -67,13 +66,13 @@
 
     <ListView
         android:id="@+id/listDummyTransaction"
-        android:layout_width="324dp"
-        android:layout_height="211dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="323dp"
+        android:layout_height="193dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
         android:id="@+id/textView"
@@ -84,6 +83,7 @@
         app:layout_constraintBottom_toTopOf="@+id/listDummyTransaction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.165"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scanBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
