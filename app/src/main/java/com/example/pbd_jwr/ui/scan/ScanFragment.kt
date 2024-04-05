@@ -5,11 +5,15 @@ import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Context.CONNECTIVITY_SERVICE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.hardware.SensorManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -24,9 +28,12 @@ import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
+import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.pbd_jwr.R
 import com.example.pbd_jwr.data.entity.Transaction
 import com.example.pbd_jwr.data.model.Category
@@ -54,7 +61,7 @@ class ScanFragment : Fragment() {
     var transactionDummyData: String = ""
     private var _binding: FragmentScanBinding? = null
     private lateinit var mTransactionViewModel: TransactionViewModel
-
+    private lateinit var connectivityManager: ConnectivityManager
 
     private val binding get() = _binding!!
 
@@ -89,6 +96,7 @@ class ScanFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentScanBinding.inflate(inflater, container, false)
+        connectivityManager = activity?.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         return binding.root
     }
 
@@ -113,10 +121,14 @@ class ScanFragment : Fragment() {
         }
 
         binding.uploadBtn.setOnClickListener {
-            imageUri?.let { uri ->
-                uploadImage(uri)
-            } ?: run {
-                Toast.makeText(context, "No image selected or taken", Toast.LENGTH_SHORT).show()
+            if(isNetworkAvailable()){
+                imageUri?.let { uri ->
+                    uploadImage(uri)
+                } ?: run {
+                    Toast.makeText(context, "No image selected or taken", Toast.LENGTH_SHORT).show()
+                }
+            }else{
+                findNavController().navigate(R.id.navigation_nonetwork)
             }
         }
 
@@ -343,6 +355,15 @@ class ScanFragment : Fragment() {
             }
         }
         return transactions
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val network = connectivityManager.activeNetwork
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
+        return networkCapabilities != null && (
+                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                )
     }
 
 }

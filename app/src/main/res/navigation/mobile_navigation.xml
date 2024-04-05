@@ -71,4 +71,10 @@
         android:id="@+id/navigation_twibbon"
         android:name="com.example.pbd_jwr.ui.twibbon.TwibbonFragment"
         android:label="Twibbon" />
+
+    <fragment
+        android:id="@+id/navigation_nonetwork"
+        android:name="com.example.pbd_jwr.ui.noNetwork.NoNetworkFragment"
+        android:label="No Internet"
+        />
 </navigation>
