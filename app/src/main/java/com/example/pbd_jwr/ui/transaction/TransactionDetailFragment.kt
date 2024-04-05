@@ -50,11 +50,6 @@ class TransactionDetailFragment : Fragment(), OnMapReadyCallback {
         if (transaction != null) {
             displayTransactionDetails(transaction)
 
-
-            binding.btnBack.setOnClickListener {
-                findNavController().popBackStack()
-            }
-
             binding.btnDelete.setOnClickListener {
                 transaction?.let { deleteTransaction(it) }
             }
