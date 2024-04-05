@@ -120,6 +120,8 @@
         android:paddingVertical="12dp"
         android:paddingHorizontal="8dp"
         android:background="@drawable/custom_input"
+        android:focusable="false"
+        android:clickable="false"
         />
 
     <TextView
@@ -148,6 +150,8 @@
         android:paddingVertical="12dp"
         android:paddingHorizontal="8dp"
         android:background="@drawable/custom_input"
+        android:focusable="false"
+        android:clickable="false"
         />
 
 
