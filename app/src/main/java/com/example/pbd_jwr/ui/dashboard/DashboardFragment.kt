@@ -1,5 +1,6 @@
 package com.example.pbd_jwr.ui.dashboard
 
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ class DashboardFragment : Fragment() {
 
     private lateinit var pieChart: PieChart
     private lateinit var viewModel: TransactionViewModel
+    private lateinit var encryptedSharedPref: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +42,8 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getAllTransactions().observe(viewLifecycleOwner) { transactions ->
+        val currentUserEmail = encryptedSharedPref.getString("email", "") ?: ""
+        viewModel.getTransactionsByEmail(currentUserEmail).observe(viewLifecycleOwner) { transactions ->
             loadPieChartData(transactions)
         }
     }

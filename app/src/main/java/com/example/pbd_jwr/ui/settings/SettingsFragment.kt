@@ -75,7 +75,8 @@ class SettingsFragment : Fragment() {
             JWR App
         """.trimIndent()
 
-        transactionViewModel.getAllTransactions().observe(viewLifecycleOwner) { transactions ->
+        val currentUserEmail = encryptedSharedPref.getString("email", "") ?: ""
+        transactionViewModel.getTransactionsByEmail(currentUserEmail).observe(viewLifecycleOwner) { transactions ->
             exportTransactionsToExcel(transactions, requireContext())?.let { uri ->
                 val emailIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "vnd.android.cursor.dir/email"
@@ -91,7 +92,8 @@ class SettingsFragment : Fragment() {
     }
 
     private fun saveTransactionsToExcel() {
-        transactionViewModel.getAllTransactions().observe(viewLifecycleOwner) { transactions ->
+        val currentUserEmail = encryptedSharedPref.getString("email", "") ?: ""
+        transactionViewModel.getTransactionsByEmail(currentUserEmail).observe(viewLifecycleOwner) { transactions ->
             exportTransactionsToExcel(transactions, requireContext())
         }
     }
