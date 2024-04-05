@@ -68,7 +68,6 @@ class TransactionDetailFragment : Fragment(), OnMapReadyCallback {
             findNavController().popBackStack()
         }
 
-
         return root
     }
 
@@ -95,6 +94,19 @@ class TransactionDetailFragment : Fragment(), OnMapReadyCallback {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = milliseconds
         return sdf.format(calendar.time)
+    }
+
+    private fun showDeleteConfirmationDialog(transaction: Transaction) {
+        AlertDialog.Builder(requireContext(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+            .setTitle("Delete Transaction")
+            .setMessage("Are you sure you want to delete this transaction?")
+            .setPositiveButton("Yes") { _, _ ->
+                transaction?.let { deleteTransaction(it) }
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun deleteTransaction(transaction: Transaction) {

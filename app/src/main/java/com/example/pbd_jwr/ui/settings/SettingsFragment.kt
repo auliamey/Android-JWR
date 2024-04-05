@@ -57,6 +57,7 @@ class SettingsFragment : Fragment() {
             intent.setAction("com.example.pbd_jwr.RANDOMIZE_TRANSACTION")
 
             LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
+
         }
 
         binding.twibbonButton.setOnClickListener {
