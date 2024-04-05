@@ -49,7 +49,6 @@ class LoginActivity : AppCompatActivity() {
         connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         networkCallback = NetworkCallbackImplementation(this)
 
-        registerNetworkCallback()
 
         if (isLoggedIn()) {
             // If the user credential is stored, login and start the MainActivity
@@ -113,7 +112,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        unregisterNetworkCallback()
     }
 
     private fun isLoggedIn(): Boolean {

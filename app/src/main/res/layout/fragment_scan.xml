@@ -1,55 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.scan.ScanFragment">
+    android:overScrollMode="never"
+    >
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.scan.ScanFragment"
+    android:paddingHorizontal="8dp"
+    >
 
     <Button
         android:id="@+id/scanBtn"
         android:layout_width="75dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="Scan"
+        android:text="@string/title_scan"
         app:layout_constraintBottom_toTopOf="@+id/listDummyTransaction"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/galleryBtn"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.3" />
+        />
 
     <Button
         android:id="@+id/galleryBtn"
         android:layout_width="90dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="Album"
+        android:text="@string/album"
         app:layout_constraintBottom_toTopOf="@+id/listDummyTransaction"
-        app:layout_constraintStart_toEndOf="@+id/scanBtn"
+        app:layout_constraintLeft_toRightOf="@id/scanBtn"
+        app:layout_constraintRight_toLeftOf="@id/uploadBtn"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.3"/>
+        />
 
     <Button
         android:id="@+id/uploadBtn"
         android:layout_width="75dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Send"
+        android:text="@string/send"
         app:layout_constraintBottom_toTopOf="@+id/listDummyTransaction"
-        app:layout_constraintEnd_toStartOf="@+id/saveTransactionsBtn"
-        app:layout_constraintStart_toEndOf="@+id/galleryBtn"
+        app:layout_constraintRight_toLeftOf="@id/saveTransactionsBtn"
+        app:layout_constraintLeft_toRightOf="@id/galleryBtn"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.3" />
+
+        />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="335dp"
         android:layout_height="335dp"
-        android:contentDescription="PreviewImg"
+        android:contentDescription="@string/previewimg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.366"
         tools:srcCompat="@tools:sample/avatars" />
 
 
@@ -57,33 +62,37 @@
         android:id="@+id/saveTransactionsBtn"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="Save"
+        android:text="@string/save"
         app:layout_constraintBottom_toTopOf="@+id/listDummyTransaction"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/uploadBtn"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.3" />
+        />
 
     <ListView
         android:id="@+id/listDummyTransaction"
         android:layout_width="323dp"
         android:layout_height="193dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        android:textSize="16sp"
+        />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Transactions:"
+        android:text="@string/title_transaction"
         android:textSize="25sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/listDummyTransaction"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.165"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scanBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

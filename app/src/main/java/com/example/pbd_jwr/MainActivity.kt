@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_transaction, R.id.navigation_dashboard, R.id.navigation_settings, R.id.navigation_transaction_add, R.id.navigation_transaction_detail, R.id.navigation_twibbon
+                R.id.navigation_transaction, R.id.navigation_dashboard, R.id.navigation_settings, R.id.navigation_transaction_add, R.id.navigation_transaction_detail, R.id.navigation_twibbon, R.id.navigation_scan
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -74,8 +74,11 @@ class MainActivity : AppCompatActivity() {
 
         val fab: FloatingActionButton = binding.fabScan
         fab.setOnClickListener {
-            // Start ScanActivity
+            // Navigate ScanFragment
             navController.navigate(R.id.navigation_scan)
+            val menuItem = navView.menu.findItem(R.id.navigation_scan)
+            menuItem.isChecked = true
+
         }
         navView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -103,6 +106,10 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
                     finish()
+                    true
+                }
+                R.id.navigation_scan->{
+                    navController.navigate(R.id.navigation_scan)
                     true
                 }
                 else -> false
