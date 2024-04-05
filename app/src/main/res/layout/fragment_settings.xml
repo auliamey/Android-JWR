@@ -37,7 +37,9 @@
         android:text="@string/save"
         app:layout_constraintTop_toBottomOf="@id/sendEmailButton"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:drawableEnd="@drawable/baseline_file_download_24"
+        />
 
     <Button
         android:id="@+id/twibbonButton"
@@ -46,7 +48,9 @@
         android:text="@string/twibbon"
         app:layout_constraintTop_toBottomOf="@+id/saveBtn"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:drawableEnd="@drawable/baseline_twibbon_24"
+        />
 
     <Button
         android:id="@+id/randomTransactionBtn"
@@ -55,7 +59,9 @@
         android:text="@string/randomizetransaction"
         app:layout_constraintTop_toBottomOf="@id/twibbonButton"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:drawableEnd="@drawable/baseline_random_24"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
