@@ -200,6 +200,7 @@ class LoginActivity : AppCompatActivity() {
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
     }
 
+
     private fun unregisterNetworkCallback() {
         connectivityManager.unregisterNetworkCallback(networkCallback)
     }
