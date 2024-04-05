@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.pbd_jwr.R
 import com.example.pbd_jwr.data.entity.Transaction
+import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import com.example.pbd_jwr.ui.transaction.TransactionViewModel
 import com.github.mikephil.charting.animation.Easing
 
@@ -35,6 +36,7 @@ class DashboardFragment : Fragment() {
 
         pieChart = view.findViewById(R.id.pieChart)
         viewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
+        encryptedSharedPref = EncryptedSharedPref.create(requireContext(), "login")
 
         return view
     }

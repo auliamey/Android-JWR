@@ -3,18 +3,11 @@ package com.example.pbd_jwr.ui.transaction
 import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.SharedPreferences
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -31,7 +24,6 @@ import com.example.pbd_jwr.databinding.FragmentTransactionAddBinding
 import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.example.pbd_jwr.R
 import java.util.Date
 
 class TransactionAddFragment : Fragment() {
@@ -53,7 +45,7 @@ class TransactionAddFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mTransactionViewModel = ViewModelProvider(this).get(TransactionViewModel::class.java)
+        mTransactionViewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
 
         _binding = FragmentTransactionAddBinding.inflate(inflater, container, false)
         val root: View = binding.root

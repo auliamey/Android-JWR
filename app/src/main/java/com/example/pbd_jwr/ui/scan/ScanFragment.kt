@@ -11,7 +11,6 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.hardware.SensorManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -23,21 +22,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
-import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.pbd_jwr.R
 import com.example.pbd_jwr.data.entity.Transaction
 import com.example.pbd_jwr.data.model.Category
-//import com.example.pbd_jwr.ScanActivity
 import com.example.pbd_jwr.databinding.FragmentScanBinding
 import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import com.example.pbd_jwr.ui.transaction.TransactionDummyAdapter
@@ -67,9 +61,6 @@ class ScanFragment : Fragment() {
 
     companion object {
         const val REQUEST_CAMERA_PERMISSION = 101
-        const val REQUEST_STORAGE_PERMISSION = 102
-        const val REQUEST_IMAGE_CAPTURE = 1
-        const val PICK_IMAGE = 3
     }
 
     data class TransactionDummy(
@@ -178,12 +169,6 @@ class ScanFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, PICK_IMAGE)
     }
 
     private fun uploadImage(imageUri: Uri) {

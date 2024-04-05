@@ -9,13 +9,8 @@ import android.os.Bundle
 import android.content.pm.PackageManager
 import android.widget.Toast
 import android.Manifest
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import androidx.activity.result.contract.ActivityResultContracts
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -28,18 +23,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.pbd_jwr.backgroundService.JWTValidationService
-import com.example.pbd_jwr.data.entity.Transaction
-import com.example.pbd_jwr.data.model.Category
 import com.example.pbd_jwr.databinding.ActivityMainBinding
 import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import com.example.pbd_jwr.network.NetworkCallbackImplementation
 import com.example.pbd_jwr.ui.transaction.TransactionViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.json.JSONObject
-import java.util.Date
-import kotlin.math.roundToInt
-import androidx.appcompat.widget.Toolbar
-import com.example.pbd_jwr.ui.transaction.TransactionAddFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -61,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         startService(serviceIntent)
 
         // Inisialisasi receiver
-        val receiver = object : BroadcastReceiver() {
+        receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (intent.action == "com.example.pbd_jwr.RANDOMIZE_TRANSACTION") {
                     val sharedPreferences = context.getSharedPreferences("randomize_data", Context.MODE_PRIVATE)
@@ -231,40 +219,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun unregisterNetworkCallback() {
         connectivityManager.unregisterNetworkCallback(networkCallback)
-    }
-
-    private val startScanActivityForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-
-            sharedPreferences = EncryptedSharedPref.create(applicationContext, "login")
-            val currentUserEmail = sharedPreferences.getString("email", "") ?: ""
-
-            val data = result.data
-            val transactionDummyData = data?.getStringExtra("transactionDummyData")
-
-            transactionDummyData?.let {
-
-                val jsonObject = JSONObject(transactionDummyData)
-                val itemsArray = jsonObject.getJSONObject("items").getJSONArray("items")
-
-                for (i in 0 until itemsArray.length()) {
-                    val itemObject = itemsArray.getJSONObject(i)
-                    val name = itemObject.getString("name")
-                    val category = Category.EXPENSE
-                    val price = itemObject.getDouble("price")
-                    val qty = itemObject.getInt("qty")
-                    val amount = (qty * price * 1000).roundToInt() / 1000.0
-                    val latitude = 6.8915
-                    val longitude = 107.6107
-                    val location = "Latitude: $latitude, Longitude: $longitude"
-                    val date = Date().time
-
-                    mTransactionViewModel.addTransaction(Transaction(email = currentUserEmail, title = name, category = category, amount = amount, latitude = latitude, longitude = longitude, date = date))
-                }
-
-
-            }
-        }
     }
 
     companion object {

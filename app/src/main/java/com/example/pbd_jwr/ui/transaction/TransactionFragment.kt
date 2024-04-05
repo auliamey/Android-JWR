@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,11 +38,14 @@ class TransactionFragment : Fragment() {
         encryptedSharedPref = EncryptedSharedPref.create(requireContext(), "login")
         val currentUserEmail = encryptedSharedPref.getString("email", "") ?: ""
 
-        mTransactionViewModel.getAllTransactions().observe(viewLifecycleOwner, Observer { transactions ->
+        mTransactionViewModel.getAllTransactions().observe(viewLifecycleOwner) { transactions ->
             transactions.forEach { transaction ->
-                Log.d("Transaction", "Title: ${transaction.title}, Category: ${transaction.category}, Amount: ${transaction.amount}")
+                Log.d(
+                    "Transaction",
+                    "Title: ${transaction.title}, Category: ${transaction.category}, Amount: ${transaction.amount}"
+                )
             }
-        })
+        }
 
         transactionAdapter = TransactionAdapter()
 
@@ -56,9 +58,10 @@ class TransactionFragment : Fragment() {
             findNavController().navigate(R.id.action_transactionFragment_to_transactionAddFragment)
         }
 
-        mTransactionViewModel.getTransactionsByEmail(currentUserEmail).observe(viewLifecycleOwner, Observer { transactions ->
+        mTransactionViewModel.getTransactionsByEmail(currentUserEmail).observe(viewLifecycleOwner
+        ) { transactions ->
             transactionAdapter.submitList(transactions)
-        })
+        }
 
         return root
     }
