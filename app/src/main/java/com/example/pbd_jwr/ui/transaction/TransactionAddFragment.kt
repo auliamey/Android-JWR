@@ -10,7 +10,11 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -27,9 +31,7 @@ import com.example.pbd_jwr.databinding.FragmentTransactionAddBinding
 import com.example.pbd_jwr.encryptedSharedPref.EncryptedSharedPref
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
+import com.example.pbd_jwr.R
 import java.util.Date
 
 class TransactionAddFragment : Fragment() {
@@ -42,6 +44,8 @@ class TransactionAddFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private lateinit var encryptedSharedPref: SharedPreferences
+
+    private lateinit var receiver: BroadcastReceiver
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
@@ -62,8 +66,19 @@ class TransactionAddFragment : Fragment() {
             }
         }
 
-        val filter = IntentFilter(TransactionAddFragment.ACTION_RANDOMIZE_TRANSACTION)
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(randomizeTransactionReceiver, filter)
+        val sharedPreferences = requireContext().getSharedPreferences("randomize_data", Context.MODE_PRIVATE)
+        val randomIntentReceived = sharedPreferences.getBoolean("randomize_intent_received", false)
+        if (randomIntentReceived) {
+            println("masuk random")
+            // Lakukan randomisasi transaksi di sini
+            handleRandomizeTransaction()
+            // Hapus status intent yang sudah diterima agar tidak diproses lagi
+            val editor = sharedPreferences.edit()
+            editor.putBoolean("randomize_intent_received", false)
+            editor.apply()
+        }
+//
+//        setupListeners()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         showCurrentLocation()
@@ -114,25 +129,29 @@ class TransactionAddFragment : Fragment() {
         }
 
 
+
         return root
     }
 
-    private fun handleRandomizeTransaction() {
-        val editMode = arguments?.getBoolean("editMode", false) ?: false
-        if (!editMode) {
-            println("random random")
-            fillRandomField()
-        }
+
+    fun handleRandomizeTransaction() {
+        val randomTitle = generateRandomTitle()
+        val randomAmount = generateRandomAmount()
+
+        binding.editTextTitle.setText(randomTitle)
+        binding.editTextAmount.setText(randomAmount.toString())
+
+        saveRandomData(randomTitle, randomAmount)
     }
 
-    private val randomizeTransactionReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            println("Intent diterima oleh broadcast receiver")
-            if (intent?.action == "com.example.pbd_jwr.RANDOMIZE_TRANSACTION") {
-                handleRandomizeTransaction()
-            }
-        }
+    private fun saveRandomData(randomTitle: String, randomAmount: Double) {
+        val sharedPreferences = requireContext().getSharedPreferences("randomize_data", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("random_title", randomTitle)
+        editor.putFloat("random_amount", randomAmount.toFloat()) // Menggunakan putFloat karena SharedPreferences tidak mendukung Double secara langsung
+        editor.apply()
     }
+
 
     private fun showCurrentLocation() {
         if (ContextCompat.checkSelfPermission(
@@ -248,24 +267,21 @@ class TransactionAddFragment : Fragment() {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun fillRandomField() {
-        val randomTitle = generateRandomTitle()
-        binding.editTextTitle.setText(randomTitle)
+    private fun generateRandomAmount(): Double {
+        return (0..300).random().toDouble()
     }
 
     private fun generateRandomTitle(): String {
-        return "Random Transaction ${System.currentTimeMillis()}"
+        return "Random Transaction"
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
 
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(randomizeTransactionReceiver)
     }
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
-        const val ACTION_RANDOMIZE_TRANSACTION = "com.example.pbd_jwr.RANDOMIZE_TRANSACTION"
     }
 
 }

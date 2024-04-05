@@ -10,6 +10,11 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import android.Manifest
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -17,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -32,6 +38,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONObject
 import java.util.Date
 import kotlin.math.roundToInt
+import androidx.appcompat.widget.Toolbar
+import com.example.pbd_jwr.ui.transaction.TransactionAddFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,16 +52,37 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mTransactionViewModel: TransactionViewModel
 
+    private lateinit var receiver: BroadcastReceiver
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val serviceIntent = Intent(this, JWTValidationService::class.java)
         startService(serviceIntent)
 
+        // Inisialisasi receiver
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (intent.action == "com.example.pbd_jwr.RANDOMIZE_TRANSACTION") {
+                    val sharedPreferences = context.getSharedPreferences("randomize_data", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putBoolean("randomize_intent_received", true)
+                    editor.apply()
+
+                }
+            }
+        }
+
+        val filter = IntentFilter().apply {
+            addAction("com.example.pbd_jwr.RANDOMIZE_TRANSACTION")
+        }
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter)
+
         sharedPreferences = EncryptedSharedPref.create(applicationContext,"login")
         sharedPreferencesEditor = sharedPreferences.edit()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         if (!isLocationPermissionGranted()) {
             requestLocationPermission()
@@ -124,6 +153,7 @@ class MainActivity : AppCompatActivity() {
         networkCallback = NetworkCallbackImplementation(this)
         registerNetworkCallback()
     }
+
     private fun isLocationPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
             this,
@@ -180,6 +210,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         val serviceIntent = Intent(this, JWTValidationService::class.java)
         stopService(serviceIntent)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
     }
 
     private fun registerNetworkCallback() {
