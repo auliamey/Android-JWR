@@ -75,7 +75,8 @@ class SettingsFragment : Fragment() {
             JWR App
         """.trimIndent()
 
-        transactionViewModel.getAllTransactions().observe(viewLifecycleOwner) { transactions ->
+        val currentUserEmail = encryptedSharedPref.getString("email", "") ?: ""
+        transactionViewModel.getTransactionsByEmail(currentUserEmail).observe(viewLifecycleOwner) { transactions ->
             exportTransactionsToExcel(transactions, requireContext())?.let { uri ->
                 val emailIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "vnd.android.cursor.dir/email"
@@ -91,7 +92,8 @@ class SettingsFragment : Fragment() {
     }
 
     private fun saveTransactionsToExcel() {
-        transactionViewModel.getAllTransactions().observe(viewLifecycleOwner) { transactions ->
+        val currentUserEmail = encryptedSharedPref.getString("email", "") ?: ""
+        transactionViewModel.getTransactionsByEmail(currentUserEmail).observe(viewLifecycleOwner) { transactions ->
             exportTransactionsToExcel(transactions, requireContext())
         }
     }
@@ -113,10 +115,10 @@ class SettingsFragment : Fragment() {
 
             // Membuat header
             val header = sheet.createRow(0)
-            header.createCell(0).setCellValue("Tanggal")
-            header.createCell(1).setCellValue("Kategori Transaksi")
-            header.createCell(2).setCellValue("Nominal Transaksi")
-            header.createCell(3).setCellValue("Nama Transaksi")
+            header.createCell(0).setCellValue("Date")
+            header.createCell(1).setCellValue("Category")
+            header.createCell(2).setCellValue("Amount")
+            header.createCell(3).setCellValue("Title")
             header.createCell(4).setCellValue("Latitude")
             header.createCell(5).setCellValue("Longitude")
 
@@ -141,10 +143,10 @@ class SettingsFragment : Fragment() {
                 }
             }
 
-            Toast.makeText(context, "Transaksi berhasil diekspor ke Excel", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Transactions exported to Spreadsheet", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(context, "Gagal mengekspor transaksi: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Failed exporting transactions: ${e.message}", Toast.LENGTH_LONG).show()
         } finally {
             workbook.close()
         }

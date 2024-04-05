@@ -1,5 +1,6 @@
 package com.example.pbd_jwr.ui.transaction
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
@@ -39,7 +40,7 @@ class TransactionDetailFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mTransactionViewModel = ViewModelProvider(this).get(TransactionViewModel::class.java)
+        mTransactionViewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
 
         _binding = FragmentTransactionDetailBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -75,11 +76,12 @@ class TransactionDetailFragment : Fragment(), OnMapReadyCallback {
         _binding = null
     }
 
+    @SuppressLint("SetTextI18n")
     private fun displayTransactionDetails(transaction: Transaction) {
         binding.textViewTitle.text = transaction.title
         binding.textViewCategory.text = transaction.category.toString()
         binding.textViewAmount.text = transaction.amount.toString()
-        binding.textViewLocation.text = "${transaction.latitude.toString()}, ${transaction.longitude.toString()}"
+        binding.textViewLocation.text = "${transaction.latitude}, ${transaction.longitude}"
         binding.textViewDate.text = formatDate(transaction.date)
 
         binding.textViewCategoryLabel.text = "Category: "
@@ -100,7 +102,7 @@ class TransactionDetailFragment : Fragment(), OnMapReadyCallback {
             .setTitle("Delete Transaction")
             .setMessage("Are you sure you want to delete this transaction?")
             .setPositiveButton(Html.fromHtml("<font color='#5F646D'>Yes</font>")) { _, _ ->
-                transaction?.let { deleteTransaction(it) }
+                deleteTransaction(transaction)
             }
             .setNegativeButton(Html.fromHtml("<font color='#5F646D'>No</font>")) { dialog, _ ->
                 dialog.dismiss()

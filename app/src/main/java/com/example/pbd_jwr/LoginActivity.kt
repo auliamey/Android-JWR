@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var password:String
     private  var client = OkHttpClient()
     private val postURL = "https://pbd-backend-2024.vercel.app/api/auth/login"
-    val mediaType = "application/json; charset=utf-8".toMediaType()
+    private val mediaType = "application/json; charset=utf-8".toMediaType()
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var sharedPreferencesEditor :Editor
@@ -130,7 +130,7 @@ class LoginActivity : AppCompatActivity() {
         val requestBody :RequestBody = jsonObject.toString().toRequestBody(mediaType)
 
         //Make Request Using Okhttp
-        val request :Request = Request.Builder().url(postURL).post(requestBody).build();
+        val request :Request = Request.Builder().url(postURL).post(requestBody).build()
         val response = client.newCall(request).enqueue(object : Callback{
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
