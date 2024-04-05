@@ -28,7 +28,7 @@ import kotlin.math.log
 class JWTValidationService : Service() {
     private lateinit var handler: Handler
     private lateinit var runnable: Runnable
-    private val INTERVAL: Long =  3 * 60 * 1000 // 2 minutes in milliseconds
+    private val INTERVAL: Long = 2 * 60 * 1000 // 1 minutes in milliseconds
 
     private  var client = OkHttpClient()
     private val validateTokenURL = "https://pbd-backend-2024.vercel.app/api/auth/token"
