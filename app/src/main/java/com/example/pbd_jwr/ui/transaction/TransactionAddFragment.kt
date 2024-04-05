@@ -77,8 +77,6 @@ class TransactionAddFragment : Fragment() {
             editor.putBoolean("randomize_intent_received", false)
             editor.apply()
         }
-//
-//        setupListeners()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         showCurrentLocation()
@@ -92,7 +90,6 @@ class TransactionAddFragment : Fragment() {
         spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedCategory = categories[position]
-                Toast.makeText(requireContext(), "Selected category: $selectedCategory", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {

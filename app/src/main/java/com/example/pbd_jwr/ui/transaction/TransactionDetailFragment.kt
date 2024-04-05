@@ -1,19 +1,18 @@
 package com.example.pbd_jwr.ui.transaction
 
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.pbd_jwr.R
 import com.example.pbd_jwr.data.entity.Transaction
 import com.example.pbd_jwr.databinding.FragmentTransactionDetailBinding
-//import com.example.pbd_jwr.ui.map.MapsFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -51,7 +50,7 @@ class TransactionDetailFragment : Fragment(), OnMapReadyCallback {
             displayTransactionDetails(transaction)
 
             binding.btnDelete.setOnClickListener {
-                transaction?.let { deleteTransaction(it) }
+                showDeleteConfirmationDialog(transaction)
             }
 
             binding.btnEdit.setOnClickListener {
@@ -97,13 +96,13 @@ class TransactionDetailFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun showDeleteConfirmationDialog(transaction: Transaction) {
-        AlertDialog.Builder(requireContext(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+        AlertDialog.Builder(requireContext())
             .setTitle("Delete Transaction")
             .setMessage("Are you sure you want to delete this transaction?")
-            .setPositiveButton("Yes") { _, _ ->
+            .setPositiveButton(Html.fromHtml("<font color='#5F646D'>Yes</font>")) { _, _ ->
                 transaction?.let { deleteTransaction(it) }
             }
-            .setNegativeButton("No") { dialog, _ ->
+            .setNegativeButton(Html.fromHtml("<font color='#5F646D'>No</font>")) { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
